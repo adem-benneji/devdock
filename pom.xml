@@ -10,5 +10,7 @@
     <description>DevTools developer toolbox monorepo</description>
     <modules>
         <module>gateway-service</module>
+        <module>tools-service</module>
+        <module>snippets-service</module>
     </modules>
 </project>

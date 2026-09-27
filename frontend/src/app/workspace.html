@@ -1,0 +1,55 @@
+<div class="container json-page"><a class="back-link" routerLink="/tools">← All tools</a><header class="json-heading"><span class="icon-tile green"><dd-icon name="braces" /></span><div><span class="eyebrow">DATA & FORMATS</span><h1>JSON Formatter</h1><p>A little structure. A lot more clarity.</p></div><button class="favorite btn" [attr.aria-pressed]="catalog.favorites().includes('json-formatter')" (click)="catalog.toggle('json-formatter')"><dd-icon name="star" /> {{ catalog.favorites().includes('json-formatter') ? 'Favorited' : 'Favorite' }}</button></header>
+<div class="workspace">
+  <section aria-labelledby="tool-title" [attr.aria-busy]="busy()">
+    <h2 id="tool-title"><dd-icon name="braces" /> Your JSON workspace</h2>
+    <dd-tool-guide id="json-help" [guide]="guide" />
+    <p class="hint">JSON is processed by your local tools service. Only explicitly saved snippets are stored. This workspace is shared by everyone using this local instance.</p>
+    @if (error(); as failure) {
+      <div class="error" role="alert">{{ failure.message }}
+        @if (failure.code === 'VERSION_CONFLICT') { <button type="button" (click)="open(selected()!.id)" [disabled]="busy()">Reopen latest version</button> }
+      </div>
+    }
+    @if (notice()) { <p role="status" class="notice">{{ notice() }}</p> }
+    <label for="json-input">JSON input <span class="hint">{{ input().length }} / 100,000 characters</span></label>
+    <textarea id="json-input" [ngModel]="input()" (ngModelChange)="editInput($event)" [disabled]="busy()" spellcheck="false" rows="12" aria-describedby="json-help input-error"></textarea>
+    <p id="input-error" class="field-error">{{ error()?.fields?.['input'] }}</p>
+    <div class="actions">
+      <button type="button" (click)="transform('FORMAT')" [disabled]="busy()">Format JSON</button>
+      <button type="button" (click)="transform('MINIFY')" [disabled]="busy()">Minify JSON</button>
+      @if (busy()) { <span role="status">Working…</span> }
+    </div>
+    <label for="json-output">Result</label>
+    <textarea id="json-output" aria-describedby="json-help" [value]="output()" readonly spellcheck="false" rows="12"></textarea>
+    <p class="hint">Format or minify after changing the input to prepare a new result for saving.</p>
+    <form (ngSubmit)="save()">
+      <label for="snippet-title">Snippet title</label>
+      <input id="snippet-title" name="title" [ngModel]="title()" (ngModelChange)="editTitle($event)" [disabled]="busy()" maxlength="120" aria-describedby="title-error" />
+      <p id="title-error" class="field-error">{{ error()?.fields?.['title'] }}</p>
+      <div class="actions">
+        <button type="submit" [disabled]="busy() || !output() || !dirty()">{{ selected() ? 'Update snippet' : 'Save snippet' }}</button>
+        <button type="button" (click)="newSnippet()" [disabled]="busy()">New snippet</button>
+        @if (selected()) { <button type="button" class="danger" (click)="remove()" [disabled]="busy()">Delete snippet</button> }
+      </div>
+    </form>
+  </section>
+  <aside id="saved-snippets" aria-labelledby="library-title" [attr.aria-busy]="loading()">
+    <h2 id="library-title">Saved snippets</h2>
+    <button type="button" (click)="load()" [disabled]="loading()">Refresh library</button>
+    @if (loading()) { <p role="status">Loading snippets…</p> }
+    @if (listError()) { <p role="alert" class="error">{{ listError() }}</p> }
+    @if (!loading() && !listError() && page().items.length === 0) { <p>No snippets here yet. Format some JSON and save your first snippet.</p> }
+    <ul>
+      @for (snippet of page().items; track snippet.id) {
+        <li><button type="button" class="snippet" [class.selected]="selected()?.id === snippet.id" [disabled]="busy()" (click)="open(snippet.id)">
+          <strong>{{ snippet.title }}</strong><span>{{ snippet.language }} · {{ snippet.updatedAt | date:'short' }}</span>
+        </button></li>
+      }
+    </ul>
+    <div class="actions">
+      <button type="button" (click)="load(page().offset - 20)" [disabled]="loading() || page().offset === 0">Previous</button>
+      <button type="button" (click)="load(page().offset + 20)" [disabled]="loading() || !page().hasNext">Next</button>
+    </div>
+  </aside>
+</div>
+
+</div>

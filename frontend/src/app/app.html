@@ -1,7 +1,16 @@
-<main>
-  <span class="badge">YOUR DEVELOPER WORKSPACE</span>
-  <h1>{{ title() }}</h1>
-  <p>A home for your everyday developer tools and code snippets.</p>
-  <p class="hint">Your workspace is ready. More tools are on the way.</p>
-</main>
-<router-outlet />
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" routerLink="/" aria-label="DevDock home" (click)="menuOpen.set(false)"><span class="brand-mark"><dd-icon name="code" /></span>DevDock<span class="brand-dot">.</span></a>
+    <button class="menu-button" type="button" aria-label="Toggle navigation" [attr.aria-expanded]="menuOpen()" aria-controls="navigation" (click)="menuOpen.set(!menuOpen())"><dd-icon [name]="menuOpen() ? 'close' : 'menu'" /></button>
+    <nav id="navigation" aria-label="Main navigation" [class.open]="menuOpen()">
+      <a routerLink="/tools" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen.set(false)">All tools</a>
+      <a routerLink="/tools/file-converter" routerLinkActive="active" (click)="menuOpen.set(false)">File converter</a>
+      <a routerLink="/" fragment="collections" (click)="menuOpen.set(false)">Collections</a>
+      <a routerLink="/tools" [queryParams]="{view:'favorites'}" (click)="menuOpen.set(false)">Favorites <span class="count">{{ catalog.favoriteCount() }}</span></a>
+      <a class="workspace-link" routerLink="/tools/json-formatter" fragment="saved-snippets" (click)="menuOpen.set(false)"><dd-icon name="book" /> My snippets <dd-icon name="diagonal" /></a>
+    </nav>
+  </div>
+</header>
+<main id="main-content" tabindex="-1"><router-outlet /></main>
+<footer class="site-footer"><div class="container footer-inner"><a class="brand" routerLink="/"><span class="brand-mark"><dd-icon name="code" /></span>DevDock<span class="brand-dot">.</span></a><span>Little tools. A little more room to build.</span><a routerLink="/tools">Find your next shortcut <dd-icon name="arrow" /></a></div></footer>

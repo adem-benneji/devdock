@@ -1,0 +1,18 @@
+@if (isLanding) { <dd-hero /> }
+<section class="container catalog-section" aria-labelledby="catalog-title">
+  <div class="section-heading"><div><span class="eyebrow">THE EVERYDAY ESSENTIALS</span>@if (isLanding) { <h2 id="catalog-title">A good tool is a small superpower.</h2> } @else { <h1 id="catalog-title">{{ onlyFavorites() ? 'Your favorites, all together.' : 'Find your next shortcut.' }}</h1> }<p>Less searching. More doing. Pick a tool and make it happen.</p></div><span class="available"><i></i> {{ catalog.tools.length }} tools, ready to go</span></div>
+  <div class="discovery"><div class="search"><dd-icon name="search" /><label class="sr-only" for="tool-search">Search tools</label><input #searchInput id="tool-search" type="search" placeholder="What are you working on? Search tools…" [ngModel]="query()" (ngModelChange)="changeQuery($event)" aria-keyshortcuts="/ Control+k Meta+k" autocomplete="off" /><kbd>/</kbd></div><button class="favorite-filter" [class.selected]="onlyFavorites()" [attr.aria-pressed]="onlyFavorites()" (click)="favorites()"><dd-icon name="star" /> Favorites <span>{{ catalog.favoriteCount() }}</span></button></div>
+  <div class="filters" aria-label="Filter tools by collection"><button [class.active]="category() === 'all'" [attr.aria-pressed]="category() === 'all'" (click)="choose('all')"><dd-icon name="grid" /> All tools <small>{{ catalog.tools.length }}</small></button>@for (item of catalog.categories; track item.id) { <button [class.active]="category() === item.id" [attr.aria-pressed]="category() === item.id" (click)="choose(item.id)">{{ item.name }}</button> }</div>
+  <p class="sr-only" role="status">{{ filtered().length }} tools found</p>
+  <div class="tool-grid">
+    @for (tool of filtered(); track tool.id) {
+      <dd-tool-card [tool]="tool" />
+    }
+    @if (!query() && category() === 'all' && !onlyFavorites()) { <a class="library-card" routerLink="/tools/json-formatter" fragment="saved-snippets"><span class="library-icon"><dd-icon name="book" /></span><h3>Keep the good bits.</h3><p>Your useful JSON deserves a home. Save it once. Come back anytime.</p><span>Open your snippets <dd-icon name="arrow" /></span></a> }
+  </div>
+  @if (!filtered().length) { <div class="empty-state"><span class="icon-tile"><dd-icon [name]="onlyFavorites() ? 'star' : 'search'" /></span><h3>{{ onlyFavorites() ? 'Make yourself at home.' : 'No tools found. Yet.' }}</h3><p>{{ onlyFavorites() ? 'Star a tool to keep your everyday favorites close by.' : 'Try a different search or explore another collection.' }}</p><button class="btn" (click)="reset()">Show all tools <dd-icon name="arrow" /></button></div> }
+</section>
+@if (isLanding) {
+  <dd-collections />
+  <section class="container values-section" aria-label="Made for your workflow"><div><dd-icon name="bolt" /><h3>Open. Use. Keep moving.</h3><p>No sign-up flow standing between you and a finished task.</p></div><div><dd-icon name="shield" /><h3>A little peace of mind.</h3><p>Browser utilities keep your input in this tab. JSON uses your local service; only saved snippets are stored.</p></div><div><dd-icon name="heart" /><h3>Your own little toolkit.</h3><p>Star your favorites. Save useful JSON. Make room for the work that matters.</p></div></section>
+}

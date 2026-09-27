@@ -32,6 +32,15 @@
             ],
             "styles": [
               "src/styles.scss"
+            ],
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "allowedCommonJsDependencies": [
+              "papaparse",
+              "he",
+              "ajv",
+              "ajv-formats",
+              "semver",
+              "nearley"
             ]
           },
           "configurations": {
@@ -70,7 +79,19 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "prebundle": {
+              "exclude": [
+                "yaml",
+                "jsonpath-plus",
+                "diff",
+                "he",
+                "ajv",
+                "ajv-formats",
+                "sql-formatter",
+                "semver"
+              ]
+            }
           }
         },
         "test": {

@@ -1,0 +1,4 @@
+      <article class="tool-card" [class]="'tool-card ' + tool().color">
+        <button class="favorite-star" [class.saved]="catalog.favorites().includes(tool().id)" [attr.aria-label]="(catalog.favorites().includes(tool().id) ? 'Unfavorite ' : 'Favorite ') + tool().name" [attr.aria-pressed]="catalog.favorites().includes(tool().id)" (click)="catalog.toggle(tool().id)"><dd-icon name="star" /></button>
+        <a [routerLink]="['/tools',tool().id]" [attr.aria-label]="'Open ' + tool().name"><span class="icon-tile"><dd-icon [name]="tool().icon" /></span><h3>{{ tool().name }}</h3><p>{{ tool().description }}</p><div class="card-bottom"><span>{{ tool().badge ?? (tool().local ? 'In your browser' : 'Save your snippets') }}</span><span class="open-arrow"><dd-icon name="arrow" /></span></div></a>
+      </article>

@@ -1,0 +1,45 @@
+# Application documentation: publish the root README only.
+*.md
+!/README.md
+/docs/
+
+# Local agent instructions, planning, and assistant state.
+AGENTS.*
+CLAUDE.*
+.agents/
+.codex/
+.claude/
+.cursor/
+
+# Machine-specific editor and operating-system files.
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+Thumbs.db
+
+# Dependencies, compiled output, caches, and test artifacts.
+node_modules/
+target/
+dist/
+out-tsc/
+.angular/
+coverage/
+playwright-report/
+test-results/
+__screenshots__/
+__pycache__/
+*.py[cod]
+*.class
+
+# Local databases, previews, logs, and environment configuration.
+.local/
+*.log
+*.pid
+.env
+.env.*
+!.env.example
+!.env.sample
+*.local
