@@ -8,9 +8,5 @@
     <packaging>pom</packaging>
     <name>DevTools</name>
     <description>DevTools developer toolbox monorepo</description>
-    <modules>
-        <module>gateway-service</module>
-        <module>tools-service</module>
-        <module>snippets-service</module>
-    </modules>
+    <modules><module>backend</module></modules>
 </project>

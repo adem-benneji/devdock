@@ -1,0 +1,50 @@
+[
+  {
+    "id": "semver-tool",
+    "mode": "inspect",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "^1.0.0"
+    }
+  },
+  {
+    "id": "semver-tool",
+    "mode": "major",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "^1.0.0"
+    }
+  },
+  {
+    "id": "semver-tool",
+    "mode": "minor",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "^1.0.0"
+    }
+  },
+  {
+    "id": "semver-tool",
+    "mode": "patch",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "^1.0.0"
+    }
+  },
+  {
+    "id": "semver-tool",
+    "mode": "range",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "^1.0.0"
+    }
+  },
+  {
+    "id": "semver-tool",
+    "mode": "compare",
+    "input": "1.2.3",
+    "fields": {
+      "reference": "1.3.0"
+    }
+  }
+]

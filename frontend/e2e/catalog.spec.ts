@@ -20,7 +20,7 @@ test('landing discovery, collections and persistent favorites work', async ({ pa
   await expect(page.getByRole('link', { name: 'Open UUID Generator' })).toBeVisible();
 });
 
-test('all six local utility modules execute real transformations', async ({ page }) => {
+test('all six core utility modules execute real backend transformations', async ({ page }) => {
   await page.goto('/tools/base64');
   await page.getByLabel('Text or Base64 input').fill('Hello 👋');
   await page.getByRole('button', { name: 'Run tool' }).click();
@@ -98,7 +98,7 @@ test('new catalog tools run real examples and expose usage guidance', async ({ p
     await expect(page.getByLabel('Result', { exact: true })).toHaveValue(expected);
     await expect(page.getByRole('alert')).toHaveCount(0);
   }
-  expect(calls).toEqual([]);
+  expect(calls.some(url => url.includes('/executions'))).toBe(true);
 });
 
 test('JSONPath worker handles invalid paths and recovers with a new query', async ({ page }) => {
@@ -132,7 +132,7 @@ test('examples follow the selected mode and guides fit mobile tool pages', async
   }
 });
 
-test('expensive JSONPath queries time out without blocking the page, then recover', async ({ page }) => {
+test('expensive JSONPath queries hit match limits without blocking the page, then recover', async ({ page }) => {
   await page.goto('/tools/jsonpath-tester');
   await page.getByLabel('JSON document').fill('{"child":'.repeat(35) + '0' + '}'.repeat(35));
   await page.getByLabel('JSONPath expression').fill('$' + '..*'.repeat(16) + '.missing');
@@ -141,7 +141,7 @@ test('expensive JSONPath queries time out without blocking the page, then recove
   await expect(page.getByRole('button', { name: 'Working…' })).toBeDisabled();
   await page.getByRole('button', { name: 'Favorite', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Favorited', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('alert')).toContainText('Query exceeded 3 seconds', { timeout: 6000 });
+  await expect(page.getByRole('alert')).toContainText('More than 500 matches', { timeout: 15000 });
   await page.getByRole('button', { name: 'Load example' }).click();
   await page.getByRole('button', { name: 'Run tool' }).click();
   await expect(page.getByLabel('Result', { exact: true })).toHaveValue(/"count": 2/);

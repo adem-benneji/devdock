@@ -9,7 +9,8 @@ import { ToolGuide } from '../shared/tool-guide';
 import { UTILITY_GUIDES } from './usage-guides';
 @Component({ imports: [FormsModule, RouterLink, Icon, ToolGuide], templateUrl: './utility.html', styleUrl: './utility.scss' })
 export class Utility implements OnDestroy {
-  private readonly cancellation = new AbortController();
+  private cancellation = new AbortController();
+  cancel() { this.cancellation.abort(); }
   ngOnDestroy() { this.cancellation.abort(); }
   readonly catalog = inject(ToolCatalog);
   readonly id = inject(ActivatedRoute).snapshot.data['tool'] as string;
@@ -30,6 +31,7 @@ export class Utility implements OnDestroy {
   editField(key: string, value: string) { this.fields.update(fields => ({ ...fields, [key]: value })); this.edit(this.input()); }
   async run() {
     if (this.busy()) return;
+    this.cancellation = new AbortController();
     this.busy.set(true); this.error.set(''); this.notice.set(''); this.output.set(null);
     try { this.output.set(await runUtility(this.id, this.input(), this.mode(), this.fields()['query'] ?? '', this.cancellation.signal, this.fields())); this.notice.set('Done. Your result is ready.'); }
     catch (error) { this.error.set(error instanceof Error ? error.message : 'Could not complete this operation.'); }

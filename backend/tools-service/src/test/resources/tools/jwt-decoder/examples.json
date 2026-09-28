@@ -1,0 +1,15 @@
+[
+  {
+    "id": "jwt-decoder",
+    "mode": "decode",
+    "input": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiRGV2RG9jayJ9.c2lnbmF0dXJl",
+    "fields": {}
+  },
+  {
+    "id": "jwt-decoder",
+    "mode": "decode",
+    "input": "not.a.jwt!",
+    "fields": {},
+    "expectedError": "JWT"
+  }
+]

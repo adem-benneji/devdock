@@ -1,0 +1,24 @@
+[
+  {
+    "id": "csv-json",
+    "mode": "to-json",
+    "input": "name,id\nAda,001\nLin,002",
+    "fields": {},
+    "expected": "[\n  {\n    \"name\": \"Ada\",\n    \"id\": \"001\"\n  },\n  {\n    \"name\": \"Lin\",\n    \"id\": \"002\"\n  }\n]",
+    "jsonResult": true
+  },
+  {
+    "id": "csv-json",
+    "mode": "to-csv",
+    "input": "[{\"name\":\"Ada\",\"id\":\"001\"},{\"name\":\"Lin\",\"id\":\"002\"}]",
+    "fields": {},
+    "expected": "name,id\r\nAda,001\r\nLin,002"
+  },
+  {
+    "id": "csv-json",
+    "mode": "to-json",
+    "input": "name,name\na,b",
+    "fields": {},
+    "expectedError": "unique"
+  }
+]

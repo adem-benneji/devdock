@@ -1,0 +1,23 @@
+[
+  {
+    "id": "pkce-generator",
+    "mode": "generate",
+    "input": "",
+    "fields": {}
+  },
+  {
+    "id": "pkce-generator",
+    "mode": "derive",
+    "input": "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+    "fields": {},
+    "expected": "{\n  \"codeVerifier\": \"dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk\",\n  \"codeChallenge\": \"E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM\",\n  \"codeChallengeMethod\": \"S256\"\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "pkce-generator",
+    "mode": "derive",
+    "input": "short",
+    "fields": {},
+    "expectedError": "43–128"
+  }
+]

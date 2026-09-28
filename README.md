@@ -1,120 +1,130 @@
 <div align="center">
 
-# ⚓ DevDock
+# DevDock
 
-**Everyday developer tools. One organized workspace.**
+**Your developer toolkit — powered by Spring Boot.**
 
-Format, inspect, convert, compare, and generate — with clear instructions and real results.
+39 focused tools · Real backend APIs · PostgreSQL snippets · Cancellable file conversion
 
-![Tools](https://img.shields.io/badge/working_tools-39-10b981)
-![Angular](https://img.shields.io/badge/Angular-22-dd0031)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6db33f)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-4169e1)
-![Status](https://img.shields.io/badge/status-local_MVP-6366f1)
-
-[Quick start](#quick-start) · [Tool catalog](#tool-catalog) · [File conversion](#file-conversion) · [Architecture](#architecture) · [API](#api) · [Testing](#testing)
+[Start locally](#quick-start) · [Tools](#tool-catalog) · [Architecture](#architecture) · [API contracts](#api-contracts) · [Contributing a tool](#adding-a-tool)
 
 </div>
 
 ---
 
-DevDock is a developer toolbox built with Angular and independent Spring Boot services. Its searchable landing page organizes **39 tools into six collections**, with favorites, responsive workspaces, examples, and input/output guidance.
-
-- **37 browser tools** process your inputs locally, including JSON/YAML conversion, regex, diffs, SQL formatting, cryptography, and encoding utilities.
-- **JSON Formatter + snippets** connects strict formatting/minification to a persistent library: save, reopen, edit, and delete documents stored in PostgreSQL.
-- **File Converter** checks uploaded content, offers compatible formats, and produces real downloads. It supports **30 input formats** and **24 output extensions**, subject to the matrix below.
-
-> **Current scope:** a working local MVP. Authentication is not implemented, so snippets belong to one shared workspace. File uploads are processed by the local tools service and are not kept as conversion history. Services bind to loopback by default.
+DevDock brings formatting, conversion, inspection, cryptography, and text utilities into one searchable workspace. Every tool explains its input, action, and output, with examples you can run. Angular manages forms and results; **all tool processing runs in Java on the backend**.
 
 ## Quick start
 
-### 1. Prerequisites
+Install **Java 21 LTS**, **Node.js 22.22.3+ / 24.15+ / 26+** (Angular 22's supported versions), **Python 3**, and **PostgreSQL 16+**. Maven is included in `backend/mvnw`. On macOS, the development script discovers Homebrew's Java 21 and PostgreSQL 16 installations.
 
-| Requirement | Version / purpose |
-|---|---|
-| Java | JDK 21+; source targets Java 21. Verified with Java 26.0.2. |
-| Node.js | Angular's installed build package requires `^22.22.3`, `^24.15.0`, or `>=26.0.0`. Verified with Node 26.8.2. |
-| npm | Included with Node; project package-manager declaration is npm 11.19.1. |
-| PostgreSQL | 16+; make `initdb`, `pg_ctl`, `psql`, and `createdb` available on `PATH`. |
-| Python | 3.9+ for local database and integration helpers. |
-| Git | To clone the repository. |
-
-Commands below use a macOS/Linux shell. Windows users can use WSL with the prerequisites installed inside WSL. Maven is supplied by the checked-in wrapper; Docker and external file-conversion CLIs are not required.
-
-### 2. Clone, initialize the database, and build
-
-```sh
-git clone https://github.com/adem-benneji/devdock.git
-cd devdock
-python3 scripts/local-db.py start
-./gateway-service/mvnw -B -ntp -f pom.xml verify
+```bash
+# From the repository root:
+make doctor
+make dev
 ```
 
-The helper creates an isolated PostgreSQL cluster in `.local/postgres`, listening on `127.0.0.1:55432`, with database `devdock_snippets` and role `devdock`. It uses trust authentication for this local development cluster. Flyway creates the snippets schema automatically. Starting the helper again reuses its existing data.
+Open **http://127.0.0.1:4200**. `make dev` starts a local PostgreSQL cluster if needed, runs backend tests, builds Angular, and starts the three services plus the frontend. The first run downloads Maven/npm dependencies. The frontend uses a development proxy to the gateway.
 
-On macOS, the helper also recognizes PostgreSQL 16 binaries under the standard Homebrew installation paths. Add PostgreSQL's `bin` directory to `PATH` for the integration runner, which invokes `psql` directly.
-
-### 3. Start the three services
-
-Open **three terminals** in the repository root and run one command per terminal:
-
-**Tools service**
-
-```sh
-java -jar tools-service/target/tools-service-0.0.1-SNAPSHOT.jar
+```bash
+make status       # Managed process state and ports
+make logs         # Recent service and frontend logs
+make stop         # Stop managed app processes; retain database and data
+make build        # Backend tests/package + frontend production build
+make check        # Builds, module checks, contract types, unit tests, real browser integration
+make format       # Consistent Java formatting (use Java 21)
 ```
 
-**Snippets service**
+For browser checks, install Chromium once:
 
-```sh
-java -jar snippets-service/target/snippets-service-0.0.1-SNAPSHOT.jar
-```
-
-**API gateway**
-
-```sh
-java -jar gateway-service/target/gateway-service-0.0.1-SNAPSHOT.jar
-```
-
-### 4. Start the frontend
-
-In a fourth terminal:
-
-```sh
+```bash
 cd frontend
-npm ci
-npm start
+npx playwright install chromium
+cd ..
+make check
 ```
 
-Open **[http://localhost:4200](http://localhost:4200)**.
+### Configuration
 
-| Page | Path |
-|---|---|
-| Landing page, search, and collections | `/` |
-| Complete tool catalog | `/tools` |
-| JSON editor and saved snippets | `/tools/json-formatter` |
-| File upload, conversion, and download | `/tools/file-converter` |
+Copy `.env.example` to `.env` for overrides. `scripts/dev.py` loads literal values; it never evaluates shell expressions. Explicit shell environment variables take precedence. Manual `java -jar` commands do not load `.env`.
 
-Angular's development proxy forwards `/api/**` to the gateway on port 8080.
+| Setting | Default | Purpose |
+|---|---|---|
+| `JAVA_HOME` | Existing environment or discovered Homebrew Java 21 | Consistent compiler and worker runtime |
+| `FRONTEND_PORT` | `4200` | Angular development server |
+| `GATEWAY_SERVICE_PORT` | `8080` | API entry point |
+| `TOOLS_SERVICE_PORT` | `8082` | Tools and execution lifecycle |
+| `SNIPPETS_SERVICE_PORT` | `8083` | Persisted snippets |
+| `DB_PORT` | `55432` | Local PostgreSQL |
+| `DB_DATA_DIR` | `.local/postgres` | Local cluster directory |
+| `SNIPPETS_DB_URL` | Local `devdock_snippets` database | Explicit value uses an external database |
+| `SNIPPETS_DB_USER` / `SNIPPETS_DB_PASSWORD` | `devdock` / empty | Local database credentials |
+| `TEST_DB_URL`, `TEST_DB_USER`, `TEST_DB_PASSWORD` | Local database / `devdock` / empty | Test connection; suites create disposable schemas |
 
-### 5. Stop or restart
+Services bind to loopback. Occupied app ports produce an error; the script never kills unrelated processes. The database helper uses trust authentication for this local-only cluster. `make stop` leaves PostgreSQL running; `make db-stop` stops the default helper-managed cluster without deleting data. For an existing cluster, use its `DB_DATA_DIR` or a database URL. Tests never clear application tables.
 
-Press `Ctrl+C` in each application terminal. Stop the database with:
+## Architecture
 
-```sh
-python3 scripts/local-db.py stop
+```mermaid
+flowchart LR
+    UI[Angular: forms and results] --> Gateway[Spring Cloud Gateway]
+    Gateway --> Tools[Spring Boot tools service]
+    Gateway --> Snippets[Spring Boot snippets service]
+    Tools --> Queue[Bounded execution queue]
+    Queue --> Workers[Disposable Java worker processes]
+    Workers --> Features[39 tool feature modules]
+    Snippets --> DB[(PostgreSQL + Flyway)]
 ```
 
-To check its state, run `python3 scripts/local-db.py status`. Database files survive stopping the cluster; restarting does not erase saved snippets.
+| Component | Owns | Storage |
+|---|---|---|
+| Gateway | Routing, CORS, request limits, downstream error translation | None |
+| Tools service | Validation, all tool engines, conversion adapters, bounded jobs and cancellation | Private temporary job files; no tool history database |
+| Snippets service | JSON/text snippets, optimistic concurrency, and pagination | Its own PostgreSQL tables and migrations |
+| Frontend | Discovery, favorites, tool forms, help/examples, status, copying/downloads | Favorite IDs in browser storage; current workspace in memory |
+
+The 37 migrated utility engines and file parsers run in child JVMs. The small streaming JSON formatter retains its bounded synchronous API. Long jobs return `202` immediately and are polled, keeping them independent of the gateway's 10-second response timeout. Legacy synchronous file endpoints use the same worker pool and cancel after 8 seconds.
+
+Jobs return an unguessable capability token; status, download, and deletion require `X-Execution-Token`. Tokens are not sent in URLs. Input files are deleted when processing finishes; the frontend deletes results after consuming them. Unclaimed results expire after two minutes. Cancellation kills the running JVM or removes queued work. Worker heap and deadlines are bounded; **this is process separation, not a complete operating-system security sandbox**. Jobs are ephemeral and do not survive a service restart.
+
+### Project structure
+
+```text
+backend/
+  pom.xml, mvnw, .mvn/          Shared dependency versions and Maven wrapper
+  gateway-service/             Routing and HTTP policies
+  snippets-service/            API, JDBC repositories, Flyway migrations
+  tools-service/src/
+    main/java/com/devtools/tools/
+      features/
+        base64/Base64Tool.java
+        regextester/RegexTesterTool.java
+        jsonformatter/         Streaming formatter and endpoint
+        fileconverter/         File endpoint and format adapters
+        ...                    One folder per tool (39 total)
+      execution/               Queue, lifecycle API and disposable worker entry point
+      utilities/               Tool interface, registry and common validation
+      shared/                  Small reusable Unicode/URL/crypto helpers
+    main/resources/tools/<tool-id>/definition.json
+    test/java/com/devtools/tools/features/<tool>/
+    test/resources/tools/<tool-id>/examples.json
+frontend/src/app/
+  features/<tool-id>/           Each tool's configuration and usage guide
+  features/json-formatter/     Dedicated snippet workspace
+  features/file-converter/     Dedicated upload/conversion workspace
+  utilities/                   Reusable tool form; API adapter, no tool engines
+  shared/                      Execution lifecycle client and UI primitives
+  generated/                   Types generated from Spring OpenAPI contracts
+contracts/                     Reviewed OpenAPI snapshots
+scripts/                       Development, database and verification commands
+tooling/contracts/             Isolated OpenAPI generator dependencies (TypeScript 5)
+```
 
 ## Tool catalog
 
-Each tool explains what to enter, what action to take, and what output to expect. Browser utilities share example loading, validation, result copying, and stale-result clearing. Favorites remember tool IDs in browser storage.
+Every operation uses a real backend. Favorites and presentation state remain in the browser. Input, including secrets used by cryptography tools, is sent to your configured DevDock backend; the UI no longer claims browser-only processing.
 
-<details>
-<summary><strong>Browse all 39 implemented tools</strong></summary>
-
-| Collection | Tool | What it does |
+| Category | Tool | Purpose |
 |---|---|---|
 | Data & formats | **File Converter** | Drop a file, discover compatible formats, and download a real conversion. |
 | Data & formats | **JSON Formatter** | Bring structure to the chaos. Format, validate, and minify your JSON. |
@@ -123,7 +133,7 @@ Each tool explains what to enter, what action to take, and what output to expect
 | Data & formats | **JSON to TypeScript** | Turn a sample payload into a useful TypeScript starting point. |
 | Data & formats | **JSON Schema Generator** | Infer a JSON Schema from your sample data, ready to refine. |
 | Data & formats | **CSV ↔ JSON** | Move between spreadsheet rows and JSON records with clear column rules. |
-| Data & formats | **YAML ↔ JSON** | Convert configuration data between YAML and JSON, right in your browser. |
+| Data & formats | **YAML ↔ JSON** | Convert configuration data between YAML and JSON, on the Spring Boot backend. |
 | Data & formats | **Number Base Converter** | Convert integers between decimal, hexadecimal, binary, and octal. |
 | Data & formats | **JSON Diff** | Compare structured documents and pinpoint changed values. |
 | Data & formats | **JSON Lines** | Move between newline-delimited JSON and ordinary arrays. |
@@ -144,7 +154,7 @@ Each tool explains what to enter, what action to take, and what output to expect
 | Web & URLs | **IPv4 CIDR Calculator** | Inspect subnet boundaries and check address membership. |
 | Web & URLs | **URL Query Editor** | Edit repeated query parameters or remove common tracking keys. |
 | Generators | **UUID Generator** | A fresh batch of random v4 UUIDs, ready for your next project. |
-| Generators | **Password Generator** | Create a random password using browser cryptographic randomness. |
+| Generators | **Password Generator** | Create a random password using Java SecureRandom. |
 | Generators | **Semantic Version Toolkit** | Inspect, increment, compare, and match semantic versions. |
 | Date & time | **Unix Timestamp** | Go from epoch to everyday. Convert timestamps and UTC dates. |
 | Text | **Case Converter** | Switch between camelCase, snake_case, kebab-case, and more. |
@@ -156,9 +166,7 @@ Each tool explains what to enter, what action to take, and what output to expect
 | Text | **Unicode Inspector** | Inspect characters, code points, bytes, and normalization forms. |
 | Text | **Line Endings** | Inspect and convert newline styles or remove a leading BOM. |
 
-</details>
-
-The JSON Formatter runs on the tools service, preserving numeric precision and rejecting duplicate keys. Its snippet library supports refresh persistence, version-conflict handling, and unsaved-edit navigation protection. JWT decoding only inspects a token; it does not verify its signature. Expensive browser operations use disposable workers with timeouts.
+JWT decoding does not verify signatures. Regex uses Java's engine with UTF-16 offsets and the documented replacement syntax. JSON uses precise backend numeric parsing; generated JavaScript/TypeScript number types still require review. SQLite SQL formatting uses the standard SQL formatter rather than a complete SQLite grammar.
 
 ## File conversion
 
@@ -199,157 +207,76 @@ Aliases such as JPEG/JPG, TIF/TIFF, and TGZ/TAR.GZ count as one format. Outputs 
 | Images | 12 megapixels, maximum 12,000 pixels per side |
 | PDFs | 10 pages; page rendering at 72 DPI |
 | Tables / workbooks | 5,000 data rows × 100 columns; up to 50 sheets |
-| File operations | Two concurrent operations per tools-service instance |
+| Execution pool | Two worker JVMs, 16 queued jobs, 64 retained jobs |
+| Worker bounds | 256 MiB Java heap; 10 seconds per utility, 60 seconds per file operation |
+| Result retention | Deleted after retrieval by the UI; otherwise expires after 2 minutes |
 
-**Not yet implemented:** audio/video conversion, presentation/e-book conversion, full Office rendering, PDF→Word/OCR, ODS and full workbook fidelity, HEIC/HEIF/AVIF/SVG/ICO, WEBP output, animation preservation, RAR, and background conversion jobs. Planned sections are labeled in the interface. Browser cancellation does not guarantee interruption of an already-running server parser.
+**Not yet implemented:** audio/video conversion, presentation/e-book conversion, full Office rendering, PDF→Word/OCR, ODS and full workbook fidelity, HEIC/HEIF/AVIF/SVG/ICO, WEBP output, animation preservation, RAR. Planned sections are labeled in the interface. Cancelling or replacing a file deletes its job and terminates its worker JVM.
 
-## Architecture
+## API contracts
 
-```mermaid
-flowchart LR
-    Browser[Angular workspace] --> Local[37 browser utilities]
-    Local --> Workers[Bounded workers for expensive operations]
-    Browser -->|HTTP via development proxy| Gateway[API gateway :8080]
-    Gateway -->|/api/tools| Tools[Tools service :8082]
-    Gateway -->|/api/snippets| Snippets[Snippets service :8083]
-    Tools --> Converters[JSON and file conversion adapters]
-    Snippets -->|JDBC + Flyway| PostgreSQL[(PostgreSQL :55432)]
+Spring Boot publishes OpenAPI at `/v3/api-docs` on each domain service. The gateway exposes `/api/contracts/tools` and `/api/contracts/snippets`. Snapshots live in `contracts/`; TypeScript is generated into `frontend/src/app/generated/`. The generator has its own locked toolchain in `tooling/contracts/` so its TypeScript 5 requirement does not constrain Angular’s TypeScript 6. `make build` installs it automatically; manual setup uses `npm ci --prefix tooling/contracts`.
+
+```bash
+# With services running at their default ports:
+python3 scripts/api-contracts.py
+# Fail on live contract drift or stale generated types:
+python3 scripts/api-contracts.py --check
+# Check types from snapshots without running services:
+python3 scripts/api-contracts.py --offline --check
 ```
 
-| Component | Responsibility | Storage |
+| Method | Endpoint | Behavior |
 |---|---|---|
-| Angular 22 | Discovery, collections, favorites, browser utilities, snippet and conversion interfaces | Favorite IDs in local storage; current inputs/results in memory |
-| Spring Cloud Gateway | Routing, CORS, request-size limits, downstream error translation | None |
-| Tools service | Strict JSON formatting and bounded file inspection/conversion | None; uploads are transient |
-| Snippets service | Document CRUD, validation, title uniqueness, optimistic concurrency | Owns PostgreSQL `snippets` table |
+| GET | `/api/tools/utilities` | Definitions, modes and input fields for 37 utilities |
+| POST | `/api/tools/{toolId}/executions` | Start a utility; JSON `{input, mode, fields}` → `202 {id, token}` |
+| POST | `/api/tools/files/executions?operation=inspect&filename=...` | Start inspection of raw octet-stream bytes |
+| POST | `/api/tools/files/executions?operation=convert&filename=...&target=...` | Start conversion; optional sheet, width, quality |
+| GET | `/api/tools/executions/{id}` | State and result; private token header required |
+| GET | `/api/tools/executions/{id}/download` | Download a successful binary result |
+| DELETE | `/api/tools/executions/{id}` | Cancel/delete job and temporary files |
+| GET | `/api/tools/files/capabilities` | Actual supported file families and limits |
+| POST | `/api/tools/json-formatter` | Streaming JSON format/minify |
+| GET / POST | `/api/snippets` | List or create snippets |
+| GET / PUT / DELETE | `/api/snippets/{id}` | Read, update, delete; mutations check versions |
 
-Services do not share database access or call each other. The frontend coordinates the user's workflow through their APIs. Conversion logic lives in format adapters; the gateway contains no conversion logic. The configured `/api/auth/**` route is a placeholder without an implemented authentication service.
+Validation errors use `{code, message, fields}`. An accepted job reports processing failures in its terminal status rather than returning an HTTP failure for polling. Full queues return `429`. Missing/expired jobs or incorrect tokens return `404`. Job states: `QUEUED`, `RUNNING`, `SUCCEEDED`, `FAILED`, `CANCELLED`, `TIMED_OUT`; a deleted job is no longer retrievable.
 
-Snippet records contain a UUID, title, content, language (`JSON` or `TEXT`), version, and timestamps. Flyway manages the schema; title uniqueness is currently case-insensitive across the shared workspace, and version checks prevent silent overwrites.
+## Adding a tool
 
-### Repository layout
+1. Add `features/<package>/<Name>Tool.java` implementing `ToolProcessor`; keep its business logic there.
+2. Register it in `ToolRegistry`. Reuse shared validation/helpers when appropriate.
+3. Add `resources/tools/<id>/definition.json` with modes and field limits.
+4. Add matching backend tests and example fixtures under that tool's folders.
+5. Add frontend `features/<id>/config.ts` and `guide.ts`, register them in the two presentation registries, and add a catalog entry.
+6. Run module checks, backend tests, browser integration, and regenerate contracts if the transport changes.
 
-```text
-devdock/
-├── frontend/                 Angular application, browser engines, and UI tests
-│   ├── src/app/catalog/      Tool registry and favorites
-│   ├── src/app/home/         Landing page, search, cards, and collections
-│   ├── src/app/utilities/    Browser tools, usage guides, and workers
-│   ├── src/app/files/        File-conversion workspace
-│   └── e2e/                  Real browser workflows and outage tests
-├── gateway-service/          Reactive API gateway and Maven wrapper
-├── tools-service/            JSON processing and file-format adapters
-├── snippets-service/         JDBC persistence, REST API, and Flyway migrations
-├── scripts/
-│   ├── local-db.py           Start/stop the local PostgreSQL cluster
-│   └── verify-integration.py Isolated real-service and browser verification
-├── pom.xml                   Backend Maven reactor
-├── .gitignore                Local/generated and internal-file exclusions
-└── README.md                 Public project guide
-```
-
-## API
-
-Send application requests through **`http://localhost:8080`**.
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/tools` | Server JSON tool catalog; browser tools live in the frontend registry |
-| POST | `/api/tools/json-formatter` | Validate and format/minify JSON |
-| GET | `/api/tools/files/capabilities` | Available/planned file sections and size limits |
-| POST | `/api/tools/files/inspect?filename=...` | Detect content and return compatible outputs |
-| POST | `/api/tools/files/convert?filename=...&target=...` | Convert uploaded bytes and return an attachment |
-| GET | `/api/snippets?limit=20&offset=0` | Paginated snippet summaries |
-| POST | `/api/snippets` | Create a saved snippet |
-| GET | `/api/snippets/{id}` | Read a saved snippet |
-| PUT | `/api/snippets/{id}` | Update using the current `version` |
-| DELETE | `/api/snippets/{id}?version=...` | Delete using the current `version` |
-
-Format a JSON document:
-
-```sh
-curl http://localhost:8080/api/tools/json-formatter \
-  -H 'Content-Type: application/json' \
-  -d '{"input":"{\"name\":\"DevDock\"}","mode":"FORMAT"}'
-```
-
-For file endpoints, send raw bytes with `Content-Type: application/octet-stream`, not multipart or Base64:
-
-```sh
-curl 'http://localhost:8080/api/tools/files/inspect?filename=data.json' \
-  -H 'Content-Type: application/octet-stream' \
-  --data-binary @data.json
-
-curl 'http://localhost:8080/api/tools/files/convert?filename=data.json&target=yaml' \
-  -H 'Content-Type: application/octet-stream' \
-  --data-binary @data.json \
-  --output data.yaml
-```
-
-Use an output ID returned by inspection. Image options are `width` (0 keeps the original width) and `quality` (JPEG, 1–100); `sheet` selects a zero-based worksheet. Conversion validates the content and target again. Responses use safe attachment names, correct MIME types, `no-store`, and `nosniff`.
-
-Errors use a consistent `{code,message,fields}` envelope with meaningful HTTP status codes, including invalid input (400), missing resources (404), conflicts (409), oversized input (413), unsupported media (415), incompatible output (422), busy converter (429), unavailable service (503), and gateway timeout (504).
-
-## Configuration
-
-| Variable | Used by | Default |
-|---|---|---|
-| `SERVER_ADDRESS` | Each Java service | `127.0.0.1` |
-| `SERVER_PORT` | Each Java service | Gateway `8080`, tools `8082`, snippets `8083` |
-| `TOOLS_SERVICE_URL` | Gateway | `http://127.0.0.1:8082` |
-| `SNIPPETS_SERVICE_URL` | Gateway | `http://127.0.0.1:8083` |
-| `FRONTEND_ORIGIN` | Gateway CORS | `http://localhost:4200` |
-| `SNIPPETS_DB_URL` | Snippets | `jdbc:postgresql://127.0.0.1:55432/devdock_snippets` |
-| `SNIPPETS_DB_USER` | Snippets | `devdock` |
-| `SNIPPETS_DB_PASSWORD` | Snippets | Empty for the local trust-authenticated cluster |
-
-Set environment variables in the terminal that starts the relevant process. `.env` files are ignored by Git but are **not automatically loaded** by these startup commands. If you change the frontend host/port, set `FRONTEND_ORIGIN` to that exact origin when starting the gateway. If you change the gateway port, update `frontend/proxy.conf.json` too.
-
-Each Java service exposes `/actuator/health` on its own port. The gateway accepts request bodies up to 8 MB and uses a 10-second downstream response timeout; the file service applies its stricter 5 MB upload limit.
+Do not create a new microservice or duplicate the common tool workspace for a new text utility. A service boundary should own a business capability, not a single encoding operation.
 
 ## Testing
 
-With PostgreSQL running, execute from the repository root:
+`make check` uses real Spring Boot services, a real PostgreSQL schema, native Java parsers, isolated JVM jobs and Chromium. The integration runner chooses temporary ports, checks persistence across a snippets-service restart, conflict handling, gateway limits/CORS, service failure/recovery, and browser workflows. It removes only the processes and schema it created.
 
-```sh
-./gateway-service/mvnw -B -ntp -f pom.xml verify
-cd frontend
-npm ci
-npm run build
-npm test -- --watch=false
-npx playwright install chromium
-cd ..
-python3 scripts/verify-integration.py
+```bash
+# Backend-only end-to-end verification:
+python3 scripts/verify-integration.py --no-browser
+# Verify per-tool folders, metadata, guides and absence of browser workers:
+python3 scripts/check-tool-layout.py
 ```
 
-| Verification | Latest completed development-cycle result |
-|---|---|
-| Backend | **87 passing cases**: 5 gateway, 75 tools, 7 snippets |
-| Frontend unit tests | **70 passed** |
-| Chromium integration | **64 passed**: 62 normal workflows and 2 actual service-outage scenarios |
-| Final file-converter browser retest | **11 passed** against the refreshed local preview |
-| Production frontend build | Passed; approximately **300 KB** initial bundle, original budgets retained |
+Independent example fixtures compare migrated Java results with the previous browser behavior, with explicit adaptations for documented engine differences. Lifecycle tests check actual worker termination, queue saturation, timeouts, token protection, large output transport and file downloads.
 
-The integration runner starts real services and Angular on temporary ports, creates a private PostgreSQL schema, tests persistence across process restarts, conflicts, CORS, request limits, and downstream failure/recovery, then runs Chromium and cleans up its own processes/schema. Conversion tests use real files; Python independently reads and writes compressed archive fixtures.
+Latest verified cycle: **206 backend tests, 4 frontend unit tests, 63 Chromium workflow tests and 3 real outage tests passed**. The Angular production build, per-tool layout check and live/generated contract checks also passed.
 
-- `python3 scripts/verify-integration.py --no-browser` runs the backend integration checks.
-- `TEST_DB_URL` (JDBC URL), `TEST_DB_USER`, and `TEST_DB_PASSWORD` override test database settings. The test role needs permission to create schemas.
-- `--postgres-data /absolute/path/to/cluster` additionally stops/restarts that cluster to check outage recovery. Use this option only with a dedicated test database.
+## Current limitations
 
-### Troubleshooting
+- Snippets are still shared; authentication and account ownership are the next high-value cycle.
+- Conversion families marked planned are not implemented. Native conversion tools installed on a developer machine are not automatically exposed as working converters.
+- Office layout/formulas, image metadata/animation, and other fidelity limits are described above. Conversions cannot promise lossless output across unrelated formats.
+- Workers have bounded JVM resources but are not fully OS-sandboxed. Abrupt termination of the parent process can leave temporary directories that require cleanup.
+- Job queues/results are local and ephemeral; there is no persistent execution history or cross-instance scheduling.
+- Browser coverage currently targets Chromium; additional engines and sustained concurrency benchmarks remain useful work.
 
-| Symptom | What to check |
-|---|---|
-| PostgreSQL command not found | Add PostgreSQL's `bin` directory to `PATH`; check `initdb`, `pg_ctl`, `psql`, and `createdb`. |
-| A port is already in use | Check for an existing DevDock process. Use matching service URLs/proxy settings if choosing other ports. |
-| Snippets service cannot start | Start PostgreSQL and confirm the database URL, role, and port. |
-| Browser receives 403/CORS errors | Match `FRONTEND_ORIGIN` to the exact browser origin, including hostname and port. |
-| API returns 503 | Check that the downstream tools/snippets service is running; inspect its health endpoint. |
-| A conversion is unavailable | Select one of the outputs returned by inspection; check format fidelity and size limits above. |
-| Integration tests cannot find Chromium | Run `npx playwright install chromium` from `frontend/`. |
+## Deployment
 
-## Development direction
-
-The next file-conversion milestone is isolated, cancellable execution with enforced resource/time limits and a real Office or media engine. Broader product work includes authentication/private snippet ownership, saved browser-tool workflows, and automated API contracts. Deployment is intentionally outside the current scope.
-
-The repository keeps application source, tests, build configuration, migrations, dependency lockfiles, and local development scripts. Internal agent instructions, planning/report documents, editor metadata, local databases, credentials, dependencies, and generated artifacts are excluded; this README is the public documentation entry point.
+Intentionally deferred. This repository's scripts configure local development only.

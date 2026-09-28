@@ -1,0 +1,12 @@
+[
+  {
+    "id": "json-diff",
+    "mode": "compare",
+    "input": "{\"name\":\"Ada\",\"active\":false}",
+    "fields": {
+      "comparison": "{\"name\":\"Ada\",\"active\":true}"
+    },
+    "expected": "{\n  \"equal\": false,\n  \"changes\": [\n    {\n      \"kind\": \"changed\",\n      \"path\": \"/active\",\n      \"before\": false,\n      \"after\": true\n    }\n  ]\n}",
+    "jsonResult": true
+  }
+]

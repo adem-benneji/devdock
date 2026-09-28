@@ -1,12 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-export interface ApiError { code: string; message: string; fields: Record<string, string>; }
-export interface SnippetSummary { id: string; title: string; language: 'JSON' | 'TEXT'; version: number; updatedAt: string; }
-export interface Snippet extends SnippetSummary { content: string; createdAt: string; }
-export interface SnippetPage { items: SnippetSummary[]; limit: number; offset: number; hasNext: boolean; }
-export interface SnippetDraft { title: string; content: string; language: 'JSON' | 'TEXT'; }
-export type JsonMode = 'FORMAT' | 'MINIFY';
+import type { components as Tools } from './generated/tools-api';
+import type { components as Snippets } from './generated/snippets-api';
+export type ApiError = Tools['schemas']['ApiError'];
+export type SnippetSummary = Snippets['schemas']['Summary'];
+export type Snippet = Snippets['schemas']['Snippet'];
+export type SnippetPage = Snippets['schemas']['Page'];
+export type SnippetDraft = Snippets['schemas']['CreateRequest'];
+export type JsonMode = Tools['schemas']['JsonRequest']['mode'];
 
 export function apiError(error: unknown): ApiError {
   if (error instanceof HttpErrorResponse && typeof error.error?.message === 'string') return error.error;
@@ -17,7 +19,7 @@ export function apiError(error: unknown): ApiError {
 export class DevDockApi {
   private readonly http = inject(HttpClient);
   transform(input: string, mode: JsonMode) {
-    return this.http.post<{ toolId: string; mode: JsonMode; output: string }>('/api/tools/json-formatter', { input, mode });
+    return this.http.post<Tools['schemas']['JsonResult']>('/api/tools/json-formatter', { input, mode });
   }
   list(offset = 0) { return this.http.get<SnippetPage>('/api/snippets', { params: { limit: 20, offset } }); }
   get(id: string) { return this.http.get<Snippet>(`/api/snippets/${id}`); }

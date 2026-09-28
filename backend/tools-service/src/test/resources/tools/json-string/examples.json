@@ -1,0 +1,24 @@
+[
+  {
+    "id": "json-string",
+    "mode": "escape",
+    "input": "Hello \"Ada\"\nWelcome",
+    "fields": {},
+    "expected": "\"Hello \\\"Ada\\\"\\nWelcome\"",
+    "jsonResult": true
+  },
+  {
+    "id": "json-string",
+    "mode": "unescape",
+    "input": "\"Hello \\\"Ada\\\"\\nWelcome\"",
+    "fields": {},
+    "expected": "Hello \"Ada\"\nWelcome"
+  },
+  {
+    "id": "json-string",
+    "mode": "unescape",
+    "input": "{\"x\":1}",
+    "fields": {},
+    "expectedError": "quoted JSON string"
+  }
+]

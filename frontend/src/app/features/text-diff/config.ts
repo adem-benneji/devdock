@@ -1,0 +1,20 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Original text",
+  "note": "Line-by-line comparison preserving whitespace, case, CRLF, and final-newline differences. Outputs ordered added/removed/unchanged chunks. Complex comparisons stop with an error; an isolated backend worker keeps the page responsive.",
+  "modes": [
+    {
+      "value": "compare",
+      "label": "Compare text"
+    }
+  ],
+  "fields": [
+    {
+      "key": "comparison",
+      "label": "Updated text",
+      "initial": "",
+      "multiline": true,
+      "maxLength": 100000
+    }
+  ]
+};

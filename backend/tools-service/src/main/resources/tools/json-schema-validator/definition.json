@@ -1,0 +1,24 @@
+{
+  "label": "JSON document",
+  "note": "Strict draft 2020-12 or draft-07 validation, including standard formats. No coercion, default insertion, or remote reference fetching. Use local $defs/definitions references. Up to 100 validation errors are returned. Backend execution limit: 10 seconds.",
+  "modes": [
+    {
+      "value": "2020",
+      "label": "Draft 2020-12"
+    },
+    {
+      "value": "draft7",
+      "label": "Draft-07"
+    }
+  ],
+  "fields": [
+    {
+      "key": "schema",
+      "label": "JSON Schema",
+      "initial": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    },\n    \"age\": {\n      \"type\": \"integer\",\n      \"minimum\": 0\n    }\n  },\n  \"required\": [\n    \"name\",\n    \"age\"\n  ],\n  \"additionalProperties\": false\n}",
+      "multiline": true,
+      "maxLength": 100000,
+      "secret": false
+    }
+  ]
+}

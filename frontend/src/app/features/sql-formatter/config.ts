@@ -1,0 +1,28 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "SQL query",
+  "note": "Formats SQL source only; never connects to a database or executes statements. Formatting does not prove a query is valid SQL. Select the appropriate dialect; SQLite uses standard SQL formatting. Up to 100,000 characters and 10 seconds.",
+  "modes": [
+    {
+      "value": "sql",
+      "label": "Standard SQL"
+    },
+    {
+      "value": "postgresql",
+      "label": "PostgreSQL"
+    },
+    {
+      "value": "mysql",
+      "label": "MySQL"
+    },
+    {
+      "value": "sqlite",
+      "label": "SQLite"
+    },
+    {
+      "value": "tsql",
+      "label": "SQL Server"
+    }
+  ],
+  "fields": []
+};

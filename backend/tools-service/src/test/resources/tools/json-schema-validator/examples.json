@@ -1,0 +1,36 @@
+[
+  {
+    "id": "json-schema-validator",
+    "mode": "2020",
+    "input": "{\"name\":\"Ada\",\"age\":37}",
+    "fields": {
+      "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    },\n    \"age\": {\n      \"type\": \"integer\",\n      \"minimum\": 0\n    }\n  },\n  \"required\": [\n    \"name\",\n    \"age\"\n  ],\n  \"additionalProperties\": false\n}"
+    }
+  },
+  {
+    "id": "json-schema-validator",
+    "mode": "draft7",
+    "input": "{\"name\":\"Ada\",\"age\":37}",
+    "fields": {
+      "schema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    },\n    \"age\": {\n      \"type\": \"integer\",\n      \"minimum\": 0\n    }\n  },\n  \"required\": [\n    \"name\",\n    \"age\"\n  ],\n  \"additionalProperties\": false\n}"
+    }
+  },
+  {
+    "id": "json-schema-validator",
+    "mode": "draft7",
+    "input": "{}",
+    "fields": {
+      "schema": "{\"$ref\":\"http://127.0.0.1/private\"}"
+    },
+    "expectedError": "Remote references"
+  },
+  {
+    "id": "json-schema-validator",
+    "mode": "2020",
+    "input": "{}",
+    "fields": {
+      "schema": "{\"unknownKeyword\":true}"
+    },
+    "expectedError": "Unknown"
+  }
+]

@@ -1,0 +1,19 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Timestamp or UTC date",
+  "note": "Choose seconds, milliseconds, or an explicit UTC ISO date (YYYY-MM-DDTHH:mm:ssZ). UTC dates convert to Unix seconds.",
+  "modes": [
+    {
+      "value": "seconds",
+      "label": "Unix seconds → UTC"
+    },
+    {
+      "value": "milliseconds",
+      "label": "Unix milliseconds → UTC"
+    },
+    {
+      "value": "iso",
+      "label": "UTC date → Unix seconds"
+    }
+  ]
+};

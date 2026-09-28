@@ -1,0 +1,11 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "JWT token",
+  "note": "Decodes three-part tokens only. No signature verification: decoded claims and expiry are untrusted. Expiry is compared with the backend clock when you run the tool. Encrypted JWTs are not supported.",
+  "modes": [
+    {
+      "value": "decode",
+      "label": "Decode JWT"
+    }
+  ]
+};

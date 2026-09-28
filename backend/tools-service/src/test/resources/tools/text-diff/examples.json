@@ -1,0 +1,12 @@
+[
+  {
+    "id": "text-diff",
+    "mode": "compare",
+    "input": "hello\nold\n",
+    "fields": {
+      "comparison": "hello\nnew\n"
+    },
+    "expected": "{\n  \"equal\": false,\n  \"chunks\": [\n    {\n      \"kind\": \"unchanged\",\n      \"lines\": 1,\n      \"text\": \"hello\\n\"\n    },\n    {\n      \"kind\": \"removed\",\n      \"lines\": 1,\n      \"text\": \"old\\n\"\n    },\n    {\n      \"kind\": \"added\",\n      \"lines\": 1,\n      \"text\": \"new\\n\"\n    }\n  ]\n}",
+    "jsonResult": true
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "json-to-typescript",
+    "mode": "generate",
+    "input": "{\"name\":\"Ada\",\"active\":true}",
+    "fields": {},
+    "expected": "export type Root = {\n  \"name\": string;\n  \"active\": boolean;\n};"
+  }
+]

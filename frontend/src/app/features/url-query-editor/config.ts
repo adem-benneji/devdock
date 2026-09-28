@@ -1,0 +1,25 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Absolute HTTP or HTTPS URL",
+  "note": "Never visits the URL. Apply accepts a JSON object mapping keys to strings, arrays of strings, or null. Null/empty arrays delete keys. Other parameters and fragments remain. URL serialization may normalize encoding. Clean removes utm_*, gclid, dclid, fbclid, msclkid, and igshid. Embedded credentials are rejected.",
+  "modes": [
+    {
+      "value": "apply",
+      "label": "Apply parameter changes"
+    },
+    {
+      "value": "clean",
+      "label": "Remove tracking parameters"
+    }
+  ],
+  "fields": [
+    {
+      "key": "changes",
+      "label": "Parameter changes (JSON object)",
+      "initial": "{\"q\":\"dev dock\",\"tag\":[\"api\",\"json\"],\"utm_source\":null}",
+      "multiline": true,
+      "maxLength": 100000,
+      "secret": false
+    }
+  ]
+};

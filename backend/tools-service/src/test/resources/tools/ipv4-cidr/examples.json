@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ipv4-cidr",
+    "mode": "calculate",
+    "input": "192.168.1.42/24",
+    "fields": {
+      "member": "192.168.1.200"
+    },
+    "expected": "{\n  \"inputAddress\": \"192.168.1.42\",\n  \"cidr\": \"192.168.1.0/24\",\n  \"network\": \"192.168.1.0\",\n  \"lastAddress\": \"192.168.1.255\",\n  \"netmask\": \"255.255.255.0\",\n  \"wildcard\": \"0.0.0.255\",\n  \"totalAddresses\": 256,\n  \"usableHostCount\": 254,\n  \"firstHost\": \"192.168.1.1\",\n  \"lastHost\": \"192.168.1.254\",\n  \"membership\": {\n    \"address\": \"192.168.1.200\",\n    \"inSubnet\": true\n  }\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "ipv4-cidr",
+    "mode": "calculate",
+    "input": "010.0.0.1/24",
+    "fields": {},
+    "expectedError": "leading zeros"
+  },
+  {
+    "id": "ipv4-cidr",
+    "mode": "calculate",
+    "input": "1.1.1.1/33",
+    "fields": {},
+    "expectedError": "between"
+  }
+]

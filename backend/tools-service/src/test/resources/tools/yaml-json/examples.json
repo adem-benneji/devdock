@@ -1,0 +1,24 @@
+[
+  {
+    "id": "yaml-json",
+    "mode": "to-json",
+    "input": "name: Ada\nactive: true\nroles:\n  - developer",
+    "fields": {},
+    "expected": "{\n  \"name\": \"Ada\",\n  \"active\": true,\n  \"roles\": [\n    \"developer\"\n  ]\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "yaml-json",
+    "mode": "to-yaml",
+    "input": "{\"name\":\"Ada\",\"active\":true,\"roles\":[\"developer\"]}",
+    "fields": {},
+    "expected": "name: Ada\nactive: true\nroles:\n  - developer\n"
+  },
+  {
+    "id": "yaml-json",
+    "mode": "to-json",
+    "input": "x: &x [*x]",
+    "fields": {},
+    "expectedError": "aliases"
+  }
+]

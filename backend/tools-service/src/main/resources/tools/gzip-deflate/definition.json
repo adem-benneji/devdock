@@ -1,0 +1,23 @@
+{
+  "label": "Text or compressed Base64",
+  "note": "The backend handles gzip or zlib-wrapped deflate (not raw deflate). Compressed output/input is padded Base64. Decompression must produce UTF-8 text, with a 1,000,000-byte expansion limit and 10-second backend execution limit. Files and arbitrary binary output are not supported.",
+  "modes": [
+    {
+      "value": "compress-gzip",
+      "label": "Compress gzip"
+    },
+    {
+      "value": "compress-deflate",
+      "label": "Compress deflate"
+    },
+    {
+      "value": "decompress-gzip",
+      "label": "Decompress gzip"
+    },
+    {
+      "value": "decompress-deflate",
+      "label": "Decompress deflate"
+    }
+  ],
+  "fields": []
+}

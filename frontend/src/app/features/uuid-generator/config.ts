@@ -1,0 +1,15 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Number of UUIDs",
+  "inputType": "number",
+  "initial": "1",
+  "min": 1,
+  "max": 100,
+  "note": "Cryptographically random UUID v4 identifiers. Generate between 1 and 100 per batch.",
+  "modes": [
+    {
+      "value": "v4",
+      "label": "Generate UUIDs"
+    }
+  ]
+};

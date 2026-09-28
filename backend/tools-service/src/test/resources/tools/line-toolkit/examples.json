@@ -1,0 +1,37 @@
+[
+  {
+    "id": "line-toolkit",
+    "mode": "unique",
+    "input": "apple\nbanana\napple",
+    "fields": {},
+    "expected": "apple\nbanana"
+  },
+  {
+    "id": "line-toolkit",
+    "mode": "sort",
+    "input": "pear\napple\nbanana",
+    "fields": {},
+    "expected": "apple\nbanana\npear"
+  },
+  {
+    "id": "line-toolkit",
+    "mode": "reverse",
+    "input": "first\nsecond\nthird",
+    "fields": {},
+    "expected": "third\nsecond\nfirst"
+  },
+  {
+    "id": "line-toolkit",
+    "mode": "trim",
+    "input": "  apple  \n banana ",
+    "fields": {},
+    "expected": "apple\nbanana"
+  },
+  {
+    "id": "line-toolkit",
+    "mode": "nonblank",
+    "input": "apple\n   \nbanana",
+    "fields": {},
+    "expected": "apple\nbanana"
+  }
+]

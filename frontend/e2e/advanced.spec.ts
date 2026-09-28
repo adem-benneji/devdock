@@ -15,7 +15,7 @@ const cases = [
   { id: 'slug-generator', modes: [['generate', /^cafe-api-hello-world$/]] },
 ] as const;
 for (const item of cases) {
-  test(`${item.id} executes every documented mode locally`, async ({ page }) => {
+  test(`${item.id} executes every documented mode on the backend`, async ({ page }) => {
     const apiCalls: string[] = [];
     page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/')) apiCalls.push(request.url()); });
     await page.goto(`/tools/${item.id}`);
@@ -27,7 +27,7 @@ for (const item of cases) {
       await expect(page.getByLabel('Result', { exact: true })).toHaveValue(result);
       await expect(page.getByRole('alert')).toHaveCount(0);
     }
-    expect(apiCalls).toEqual([]);
+    expect(apiCalls.some(url => url.includes('/executions'))).toBe(true);
   });
 }
 
@@ -47,12 +47,12 @@ test('secondary editor changes invalidate comparison results and invalid JSON re
 
 test('catastrophic regex times out while navigation stays responsive and a later run recovers', async ({ page }) => {
   await page.goto('/tools/regex-tester');
-  await page.getByLabel('Text to search').fill('a'.repeat(35) + '!');
+  await page.getByLabel('Text to search').fill('a'.repeat(99000) + '!');
   await page.getByLabel('Regular expression').fill('(a+)+$');
   await page.getByRole('button', { name: 'Run tool' }).click();
   await page.getByRole('button', { name: 'Favorite', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Favorited', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('alert')).toContainText('Analysis exceeded 3 seconds', { timeout: 6000 });
+  await expect(page.getByRole('alert')).toContainText('Execution exceeded its time limit', { timeout: 15000 });
   await page.getByRole('button', { name: 'Load example' }).click();
   await page.getByRole('button', { name: 'Run tool' }).click();
   await expect(page.getByLabel('Result', { exact: true })).toHaveValue(/"count": 2/);
@@ -60,7 +60,7 @@ test('catastrophic regex times out while navigation stays responsive and a later
 
 test('leaving an active regex cancels the worker and does not leak results into the next tool', async ({ page }) => {
   await page.goto('/tools/regex-tester');
-  await page.getByLabel('Text to search').fill('a'.repeat(35) + '!');
+  await page.getByLabel('Text to search').fill('a'.repeat(99000) + '!');
   await page.getByLabel('Regular expression').fill('(a+)+$');
   await page.getByRole('button', { name: 'Run tool' }).click();
   await page.getByRole('link', { name: 'All tools', exact: true }).first().click();
@@ -92,4 +92,19 @@ test('all new workspaces fit mobile including the second editor', async ({ page 
     await expect(page.getByText('What you get', { exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
+});
+
+test('Cancel stops a backend execution and permits the next operation', async ({ page, request }) => {
+  await page.goto('/tools/regex-tester');
+  await page.getByLabel('Text to search').fill('a'.repeat(99000) + '!');
+  await page.getByLabel('Regular expression').fill('(a+)+$');
+  const accepted = page.waitForResponse(response => response.url().endsWith('/regex-tester/executions') && response.request().method() === 'POST');
+  await page.getByRole('button', { name: 'Run tool' }).click();
+  const ticket = await (await accepted).json();
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Execution cancelled');
+  await expect.poll(async () => (await request.get(`/api/tools/executions/${ticket.id}`, { headers: { 'X-Execution-Token': ticket.token } })).status()).toBe(404);
+  await page.getByRole('button', { name: 'Load example' }).click();
+  await page.getByRole('button', { name: 'Run tool' }).click();
+  await expect(page.getByLabel('Result', { exact: true })).toHaveValue(/"count": 2/);
 });

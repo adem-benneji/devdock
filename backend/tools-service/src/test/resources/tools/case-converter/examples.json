@@ -1,0 +1,37 @@
+[
+  {
+    "id": "case-converter",
+    "mode": "camel",
+    "input": "Hello from Dev Dock",
+    "fields": {},
+    "expected": "helloFromDevDock"
+  },
+  {
+    "id": "case-converter",
+    "mode": "snake",
+    "input": "Hello from Dev Dock",
+    "fields": {},
+    "expected": "hello_from_dev_dock"
+  },
+  {
+    "id": "case-converter",
+    "mode": "kebab",
+    "input": "Hello from Dev Dock",
+    "fields": {},
+    "expected": "hello-from-dev-dock"
+  },
+  {
+    "id": "case-converter",
+    "mode": "upper",
+    "input": "Hello from Dev Dock",
+    "fields": {},
+    "expected": "HELLO FROM DEV DOCK"
+  },
+  {
+    "id": "case-converter",
+    "mode": "lower",
+    "input": "Hello from Dev Dock",
+    "fields": {},
+    "expected": "hello from dev dock"
+  }
+]

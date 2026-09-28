@@ -1,0 +1,24 @@
+[
+  {
+    "id": "unix-timestamp",
+    "mode": "seconds",
+    "input": "1704067200",
+    "fields": {},
+    "expected": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "unix-timestamp",
+    "mode": "milliseconds",
+    "input": "1704067200123",
+    "fields": {},
+    "expected": "2024-01-01T00:00:00.123Z"
+  },
+  {
+    "id": "unix-timestamp",
+    "mode": "iso",
+    "input": "2024-01-01T00:00:00Z",
+    "fields": {},
+    "expected": "1704067200",
+    "jsonResult": true
+  }
+]

@@ -1,0 +1,19 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Text to hash",
+  "note": "SHA-256, SHA-384, or SHA-512 of the exact UTF-8 input, including spaces and line breaks. This is a digest, not encryption or a password hashing scheme.",
+  "modes": [
+    {
+      "value": "sha256",
+      "label": "Generate SHA-256"
+    },
+    {
+      "value": "sha384",
+      "label": "Generate SHA-384"
+    },
+    {
+      "value": "sha512",
+      "label": "Generate SHA-512"
+    }
+  ]
+};

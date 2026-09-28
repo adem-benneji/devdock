@@ -9,7 +9,7 @@ const examples = [
 ] as const;
 
 for (const example of examples) {
-  test(`${example.id} runs every example in the selected mode without API calls`, async ({ page }) => {
+  test(`${example.id} runs every example in the selected mode through Spring Boot APIs`, async ({ page }) => {
     const apiCalls: string[] = [];
     page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/')) apiCalls.push(request.url()); });
     await page.goto(`/tools/${example.id}`);
@@ -21,7 +21,7 @@ for (const example of examples) {
       await expect(page.getByLabel('Result', { exact: true })).toHaveValue(result);
       await expect(page.getByRole('alert')).toHaveCount(0);
     }
-    expect(apiCalls).toEqual([]);
+    expect(apiCalls.some(url => url.includes('/executions'))).toBe(true);
   });
 }
 
@@ -37,7 +37,7 @@ test('CSV and YAML report invalid inputs and recover without stale output', asyn
   await page.getByLabel('Operation', { exact: true }).selectOption('to-csv');
   await expect(page.getByLabel('Result', { exact: true })).toHaveValue('');
   await page.goto('/tools/yaml-json');
-  for (const input of ['x: &x [*x]', 'x: 9007199254740993', 'x: 1\nx: 2']) {
+  for (const input of ['x: &x [*x]', 'x: !custom test', 'x: 1\nx: 2']) {
     await page.getByLabel('YAML or JSON input').fill(input);
     await page.getByRole('button', { name: 'Run tool' }).click();
     await expect(page.getByRole('alert')).toBeVisible();

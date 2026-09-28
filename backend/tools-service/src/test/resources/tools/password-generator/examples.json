@@ -1,0 +1,14 @@
+[
+  {
+    "id": "password-generator",
+    "mode": "mixed",
+    "input": "24",
+    "fields": {}
+  },
+  {
+    "id": "password-generator",
+    "mode": "alphanumeric",
+    "input": "24",
+    "fields": {}
+  }
+]

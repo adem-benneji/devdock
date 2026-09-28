@@ -1,0 +1,10 @@
+[
+  {
+    "id": "word-counter",
+    "mode": "count",
+    "input": "Hello world!",
+    "fields": {},
+    "expected": "{\n  \"words\": 2,\n  \"characters\": 12,\n  \"charactersWithoutWhitespace\": 11,\n  \"lines\": 1,\n  \"utf8Bytes\": 12,\n  \"estimatedReadingSeconds\": 1\n}",
+    "jsonResult": true
+  }
+]

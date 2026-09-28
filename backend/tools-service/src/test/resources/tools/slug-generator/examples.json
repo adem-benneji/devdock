@@ -1,0 +1,9 @@
+[
+  {
+    "id": "slug-generator",
+    "mode": "generate",
+    "input": "Café & API: Hello, World!",
+    "fields": {},
+    "expected": "cafe-api-hello-world"
+  }
+]

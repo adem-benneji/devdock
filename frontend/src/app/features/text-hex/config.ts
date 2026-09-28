@@ -1,0 +1,15 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "UTF-8 text or hex bytes",
+  "note": "Encode text as hexadecimal UTF-8 bytes, or decode byte pairs to text. Whitespace between pairs is accepted; 0x prefixes are not. Invalid UTF-8 and unpaired surrogates are rejected. A leading Unicode BOM is preserved.",
+  "modes": [
+    {
+      "value": "encode",
+      "label": "Text → hex bytes"
+    },
+    {
+      "value": "decode",
+      "label": "Hex bytes → text"
+    }
+  ]
+};

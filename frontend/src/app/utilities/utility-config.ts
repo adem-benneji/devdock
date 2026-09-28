@@ -1,24 +1,77 @@
-import { WORKFLOW_CONFIG } from './workflow-config';
-import { ADVANCED_CONFIG } from './advanced-config';
-export interface Configuration { label: string; note: string; inputType?: 'number'; initial?: string; min?: number; max?: number; fields?: { key: string; label: string; initial: string; maxLength: number; secret?: boolean; multiline?: boolean }[]; modes: { value: string; label: string }[]; }
+import type { Configuration } from './configuration';
+import { config as regex_tester } from '../features/regex-tester/config';
+import { config as json_diff } from '../features/json-diff/config';
+import { config as text_diff } from '../features/text-diff/config';
+import { config as json_lines } from '../features/json-lines/config';
+import { config as json_flatten } from '../features/json-flatten/config';
+import { config as html_entities } from '../features/html-entities/config';
+import { config as json_string } from '../features/json-string/config';
+import { config as text_hex } from '../features/text-hex/config';
+import { config as unicode_inspector } from '../features/unicode-inspector/config';
+import { config as line_endings } from '../features/line-endings/config';
+import { config as password_generator } from '../features/password-generator/config';
+import { config as slug_generator } from '../features/slug-generator/config';
+import { config as json_schema_validator } from '../features/json-schema-validator/config';
+import { config as sql_formatter } from '../features/sql-formatter/config';
+import { config as semver_tool } from '../features/semver-tool/config';
+import { config as hmac_signer } from '../features/hmac-signer/config';
+import { config as pkce_generator } from '../features/pkce-generator/config';
+import { config as ipv4_cidr } from '../features/ipv4-cidr/config';
+import { config as url_query_editor } from '../features/url-query-editor/config';
+import { config as gzip_deflate } from '../features/gzip-deflate/config';
+import { config as csv_json } from '../features/csv-json/config';
+import { config as yaml_json } from '../features/yaml-json/config';
+import { config as markdown_table } from '../features/markdown-table/config';
+import { config as line_toolkit } from '../features/line-toolkit/config';
+import { config as number_base_converter } from '../features/number-base-converter/config';
+import { config as jsonpath_tester } from '../features/jsonpath-tester/config';
+import { config as json_to_typescript } from '../features/json-to-typescript/config';
+import { config as json_schema_generator } from '../features/json-schema-generator/config';
+import { config as jwt_decoder } from '../features/jwt-decoder/config';
+import { config as url_parser } from '../features/url-parser/config';
+import { config as word_counter } from '../features/word-counter/config';
+import { config as base64 } from '../features/base64/config';
+import { config as url_codec } from '../features/url-codec/config';
+import { config as hash_generator } from '../features/hash-generator/config';
+import { config as uuid_generator } from '../features/uuid-generator/config';
+import { config as unix_timestamp } from '../features/unix-timestamp/config';
+import { config as case_converter } from '../features/case-converter/config';
 export const CONFIG: Record<string, Configuration> = {
-  ...ADVANCED_CONFIG,
-  ...WORKFLOW_CONFIG,
-  'csv-json': { label: 'CSV or JSON input', note: 'Comma-separated CSV with unique, nonblank headers; all CSV values stay strings. JSON input must be an array of flat objects. Missing/null cells become empty. Up to 100 columns and 5,000 rows. CSV export prefixes formula-like strings with an apostrophe for spreadsheet use, including headers.', modes: [{ value: 'to-json', label: 'CSV → JSON' }, { value: 'to-csv', label: 'JSON → CSV' }] },
-  'yaml-json': { label: 'YAML or JSON input', note: 'One YAML 1.2 document with string keys and JSON-compatible values. Aliases, custom types, nonfinite numbers, unsafe integers, and YAML 1.1 directives are rejected. Comments and formatting are not preserved. Numbers use browser precision. Conversion runs in a worker with a 3-second limit.', modes: [{ value: 'to-json', label: 'YAML → JSON' }, { value: 'to-yaml', label: 'JSON → YAML' }] },
-  'markdown-table': { label: 'CSV table', note: 'Uses comma-separated CSV with a header and consistent row widths. Escapes HTML, pipes, and common Markdown syntax as entities; multiline cells become <br>. Outputs source text for a Markdown renderer supporting tables. Up to 100 columns and 5,000 rows.', modes: [{ value: 'generate', label: 'Generate table' }] },
-  'line-toolkit': { label: 'Lines of text', note: 'Operations are case-sensitive. Sorting uses deterministic UTF-16 order, not natural numeric order. Deduplication keeps the first occurrence. Output uses LF line endings and preserves a final newline if present. Blank lines stay unless Remove blank lines is selected.', modes: [{ value: 'unique', label: 'Remove duplicate lines' }, { value: 'sort', label: 'Sort lines A → Z' }, { value: 'reverse', label: 'Reverse line order' }, { value: 'trim', label: 'Trim each line' }, { value: 'nonblank', label: 'Remove blank lines' }] },
-  'number-base-converter': { label: 'Integer to convert', note: 'Choose the input base. Enter up to 4,096 digits with an optional + or − (ASCII minus), without 0x/0b/0o prefixes, separators, or fractions. Results are exact signed integers, not fixed-width two’s complement. Output numbers are strings to preserve precision.', modes: [{ value: 'decimal', label: 'Input: decimal (10)' }, { value: 'hex', label: 'Input: hexadecimal (16)' }, { value: 'binary', label: 'Input: binary (2)' }, { value: 'octal', label: 'Input: octal (8)' }] },
-  'jsonpath-tester': { label: 'JSON document', fields: [{ key: 'query', label: 'JSONPath expression', initial: '$.users[*].name', maxLength: 500 }], note: 'Up to 100,000 characters, 64 nesting levels, 500 matches, and 3 seconds per query. Properties, indexes, wildcards, slices, and recursive descent are supported. JavaScript filters and scripts are disabled.', modes: [{ value: 'query', label: 'Query JSON' }] },
-  'json-to-typescript': { label: 'Sample JSON', note: 'Infers a Root type from one sample. Observed fields are required; mixed arrays use unions and empty arrays use unknown. Review generated types before use. JSON numbers use browser precision; unsafe integers are rejected.', modes: [{ value: 'generate', label: 'Generate TypeScript' }] },
-  'json-schema-generator': { label: 'Sample JSON', note: 'Generates draft 2020-12 JSON Schema. Observed keys are required; extra properties remain allowed. Empty arrays have unconstrained items. Review the inferred schema; this tool does not validate other documents against it.', modes: [{ value: 'generate', label: 'Generate schema' }] },
-  'jwt-decoder': { label: 'JWT token', note: 'Decodes three-part tokens only. No signature verification: decoded claims and expiry are untrusted. Expiry is compared with your device clock when you run the tool. Encrypted JWTs are not supported.', modes: [{ value: 'decode', label: 'Decode JWT' }] },
-  'url-parser': { label: 'Absolute HTTP or HTTPS URL', note: 'Parses locally without visiting the address. Duplicate query parameters are preserved and query + signs become spaces. Credentials are flagged but omitted from the result. Path and fragment retain percent escapes.', modes: [{ value: 'parse', label: 'Parse URL' }] },
-  'word-counter': { label: 'Text to measure', note: 'Uses Unicode word and visible-character segmentation with English locale rules. Reading time assumes 200 words per minute. Line counts include trailing blank lines; empty text has zero lines.', modes: [{ value: 'count', label: 'Count text' }] },
-  base64: { label: 'Text or Base64 input', note: 'Standard Base64 with padding. Decoding expects UTF-8 text; files and binary data are not supported.', modes: [{ value: 'encode', label: 'Encode to Base64' }, { value: 'decode', label: 'Decode to text' }] },
-  'url-codec': { label: 'URL component', note: 'Encodes one URL component, not an entire URL. A plus sign stays a plus sign when decoding.', modes: [{ value: 'encode', label: 'Encode component' }, { value: 'decode', label: 'Decode component' }] },
-  'hash-generator': { label: 'Text to hash', note: 'SHA-256, SHA-384, or SHA-512 of the exact UTF-8 input, including spaces and line breaks. This is a digest, not encryption or a password hashing scheme.', modes: ['256', '384', '512'].map(bits => ({ value: 'sha' + bits, label: 'Generate SHA-' + bits })) },
-  'uuid-generator': { label: 'Number of UUIDs', inputType: 'number', initial: '1', min: 1, max: 100, note: 'Cryptographically random UUID v4 identifiers. Generate between 1 and 100 per batch.', modes: [{ value: 'v4', label: 'Generate UUIDs' }] },
-  'unix-timestamp': { label: 'Timestamp or UTC date', note: 'Choose seconds, milliseconds, or an explicit UTC ISO date (YYYY-MM-DDTHH:mm:ssZ). UTC dates convert to Unix seconds.', modes: [{ value: 'seconds', label: 'Unix seconds → UTC' }, { value: 'milliseconds', label: 'Unix milliseconds → UTC' }, { value: 'iso', label: 'UTC date → Unix seconds' }] },
-  'case-converter': { label: 'Text to convert', note: 'Word-based cases split punctuation and existing camelCase. Uppercase and lowercase preserve punctuation.', modes: [{ value: 'camel', label: 'camelCase' }, { value: 'snake', label: 'snake_case' }, { value: 'kebab', label: 'kebab-case' }, { value: 'upper', label: 'UPPERCASE' }, { value: 'lower', label: 'lowercase' }] },
+  'regex-tester': regex_tester,
+  'json-diff': json_diff,
+  'text-diff': text_diff,
+  'json-lines': json_lines,
+  'json-flatten': json_flatten,
+  'html-entities': html_entities,
+  'json-string': json_string,
+  'text-hex': text_hex,
+  'unicode-inspector': unicode_inspector,
+  'line-endings': line_endings,
+  'password-generator': password_generator,
+  'slug-generator': slug_generator,
+  'json-schema-validator': json_schema_validator,
+  'sql-formatter': sql_formatter,
+  'semver-tool': semver_tool,
+  'hmac-signer': hmac_signer,
+  'pkce-generator': pkce_generator,
+  'ipv4-cidr': ipv4_cidr,
+  'url-query-editor': url_query_editor,
+  'gzip-deflate': gzip_deflate,
+  'csv-json': csv_json,
+  'yaml-json': yaml_json,
+  'markdown-table': markdown_table,
+  'line-toolkit': line_toolkit,
+  'number-base-converter': number_base_converter,
+  'jsonpath-tester': jsonpath_tester,
+  'json-to-typescript': json_to_typescript,
+  'json-schema-generator': json_schema_generator,
+  'jwt-decoder': jwt_decoder,
+  'url-parser': url_parser,
+  'word-counter': word_counter,
+  'base64': base64,
+  'url-codec': url_codec,
+  'hash-generator': hash_generator,
+  'uuid-generator': uuid_generator,
+  'unix-timestamp': unix_timestamp,
+  'case-converter': case_converter,
 };

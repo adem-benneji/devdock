@@ -1,0 +1,38 @@
+[
+  {
+    "id": "unicode-inspector",
+    "mode": "inspect",
+    "input": "A👋",
+    "fields": {},
+    "expected": "{\n  \"codePoints\": 2,\n  \"utf16Units\": 3,\n  \"utf8Bytes\": 5,\n  \"graphemes\": 2,\n  \"points\": [\n    {\n      \"character\": \"A\",\n      \"codePoint\": \"U+0041\",\n      \"utf16Offset\": 0,\n      \"utf8Hex\": \"41\"\n    },\n    {\n      \"character\": \"👋\",\n      \"codePoint\": \"U+1F44B\",\n      \"utf16Offset\": 1,\n      \"utf8Hex\": \"f0 9f 91 8b\"\n    }\n  ]\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "unicode-inspector",
+    "mode": "NFC",
+    "input": "café",
+    "fields": {},
+    "expected": "café"
+  },
+  {
+    "id": "unicode-inspector",
+    "mode": "NFD",
+    "input": "café",
+    "fields": {},
+    "expected": "café"
+  },
+  {
+    "id": "unicode-inspector",
+    "mode": "NFKC",
+    "input": "Ａ café",
+    "fields": {},
+    "expected": "A café"
+  },
+  {
+    "id": "unicode-inspector",
+    "mode": "NFKD",
+    "input": "Ａ café",
+    "fields": {},
+    "expected": "A café"
+  }
+]

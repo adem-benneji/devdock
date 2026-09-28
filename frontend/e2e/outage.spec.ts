@@ -20,3 +20,13 @@ test('file converter reports actual service outage and keeps the original select
   await expect(page.locator('.file-summary')).toContainText('keep.json');
   await expect(page.getByRole('button',{name:'Remove file',exact:true})).toBeEnabled();
 });
+
+test('utility reports a real backend outage and retains its input', async ({ page }) => {
+  await page.goto('/tools/base64');
+  await page.getByLabel('Text or Base64 input').fill('Keep this input');
+  await page.getByRole('button', { name: 'Run tool' }).click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByLabel('Text or Base64 input')).toHaveValue('Keep this input');
+  await expect(page.getByRole('button', { name: 'Copy result' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Run tool' })).toBeEnabled();
+});

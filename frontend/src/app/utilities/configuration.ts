@@ -1,0 +1,1 @@
+export interface Configuration { label: string; note: string; inputType?: 'number'; initial?: string; min?: number; max?: number; fields?: { key: string; label: string; initial: string; maxLength: number; secret?: boolean; multiline?: boolean }[]; modes: { value: string; label: string }[]; }

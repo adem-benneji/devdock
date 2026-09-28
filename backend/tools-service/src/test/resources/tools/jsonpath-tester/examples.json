@@ -1,0 +1,30 @@
+[
+  {
+    "id": "jsonpath-tester",
+    "mode": "query",
+    "input": "{\"users\":[{\"name\":\"Ada\",\"active\":true},{\"name\":\"Lin\",\"active\":false}]}",
+    "fields": {
+      "query": "$.users[*].name"
+    },
+    "expected": "{\n  \"count\": 2,\n  \"matches\": [\n    {\n      \"path\": \"$['users'][0]['name']\",\n      \"value\": \"Ada\"\n    },\n    {\n      \"path\": \"$['users'][1]['name']\",\n      \"value\": \"Lin\"\n    }\n  ]\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "jsonpath-tester",
+    "mode": "query",
+    "input": "{\"a\":1}",
+    "fields": {
+      "query": "$[?(@.a)]"
+    },
+    "expectedError": "Filters and scripts"
+  },
+  {
+    "id": "jsonpath-tester",
+    "mode": "query",
+    "input": "{\"x\":1,\"x\":2}",
+    "fields": {
+      "query": "$"
+    },
+    "expectedError": "duplicate"
+  }
+]

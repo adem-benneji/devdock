@@ -1,0 +1,15 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Text or Base64 input",
+  "note": "Standard Base64 with padding. Decoding expects UTF-8 text; files and binary data are not supported.",
+  "modes": [
+    {
+      "value": "encode",
+      "label": "Encode to Base64"
+    },
+    {
+      "value": "decode",
+      "label": "Decode to text"
+    }
+  ]
+};

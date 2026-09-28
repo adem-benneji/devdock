@@ -1,0 +1,19 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Password length",
+  "inputType": "number",
+  "initial": "24",
+  "min": 8,
+  "max": 128,
+  "note": "Generate one random password of 8–128 characters using Java SecureRandom and unbiased character selection. Mixed uses letters, digits, and symbols; alphanumeric uses letters and digits. Character classes are not guaranteed in each result. Processing runs on your backend; temporary results are deleted after retrieval or expiry.",
+  "modes": [
+    {
+      "value": "mixed",
+      "label": "Letters, digits & symbols"
+    },
+    {
+      "value": "alphanumeric",
+      "label": "Letters & digits"
+    }
+  ]
+};

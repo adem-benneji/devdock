@@ -1,0 +1,14 @@
+[
+  {
+    "id": "html-entities",
+    "mode": "encode",
+    "input": "<b>A & B</b>",
+    "fields": {}
+  },
+  {
+    "id": "html-entities",
+    "mode": "decode",
+    "input": "&lt;b&gt;A &amp; B&lt;/b&gt;",
+    "fields": {}
+  }
+]

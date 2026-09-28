@@ -1,0 +1,11 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Sample JSON",
+  "note": "Infers a Root type from one sample. Observed fields are required; mixed arrays use unions and empty arrays use unknown. Review generated types before use. JSON numbers are parsed with decimal precision; generated TypeScript number types still require review.",
+  "modes": [
+    {
+      "value": "generate",
+      "label": "Generate TypeScript"
+    }
+  ]
+};

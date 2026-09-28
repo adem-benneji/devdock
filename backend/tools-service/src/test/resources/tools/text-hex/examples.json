@@ -1,0 +1,16 @@
+[
+  {
+    "id": "text-hex",
+    "mode": "encode",
+    "input": "Hi 👋",
+    "fields": {},
+    "expected": "48 69 20 f0 9f 91 8b"
+  },
+  {
+    "id": "text-hex",
+    "mode": "decode",
+    "input": "48 69 20 f0 9f 91 8b",
+    "fields": {},
+    "expected": "Hi 👋"
+  }
+]

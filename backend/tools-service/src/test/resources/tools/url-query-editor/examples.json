@@ -1,0 +1,27 @@
+[
+  {
+    "id": "url-query-editor",
+    "mode": "apply",
+    "input": "https://example.com/search?q=old&utm_source=newsletter#results",
+    "fields": {
+      "changes": "{\"q\":\"dev dock\",\"tag\":[\"api\",\"json\"],\"utm_source\":null}"
+    },
+    "expected": "https://example.com/search?q=dev+dock&tag=api&tag=json#results"
+  },
+  {
+    "id": "url-query-editor",
+    "mode": "clean",
+    "input": "https://example.com/search?q=old&utm_source=newsletter#results",
+    "fields": {
+      "changes": "{\"q\":\"dev dock\",\"tag\":[\"api\",\"json\"],\"utm_source\":null}"
+    },
+    "expected": "https://example.com/search?q=old#results"
+  },
+  {
+    "id": "url-query-editor",
+    "mode": "clean",
+    "input": "https://name:secret@example.com/",
+    "fields": {},
+    "expectedError": "credentials"
+  }
+]

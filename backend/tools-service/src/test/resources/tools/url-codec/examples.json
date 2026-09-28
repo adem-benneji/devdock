@@ -1,0 +1,16 @@
+[
+  {
+    "id": "url-codec",
+    "mode": "encode",
+    "input": "hello world&",
+    "fields": {},
+    "expected": "hello%20world%26"
+  },
+  {
+    "id": "url-codec",
+    "mode": "decode",
+    "input": "hello%20world%26",
+    "fields": {},
+    "expected": "hello world&"
+  }
+]

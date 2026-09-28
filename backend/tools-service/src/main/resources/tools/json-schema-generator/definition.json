@@ -1,0 +1,10 @@
+{
+  "label": "Sample JSON",
+  "note": "Generates draft 2020-12 JSON Schema. Observed keys are required; extra properties remain allowed. Empty arrays have unconstrained items. Review the inferred schema; this tool does not validate other documents against it.",
+  "modes": [
+    {
+      "value": "generate",
+      "label": "Generate schema"
+    }
+  ]
+}

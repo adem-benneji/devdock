@@ -1,0 +1,41 @@
+[
+  {
+    "id": "number-base-converter",
+    "mode": "decimal",
+    "input": "255",
+    "fields": {},
+    "expected": "{\n  \"decimal\": \"255\",\n  \"hexadecimal\": \"FF\",\n  \"binary\": \"11111111\",\n  \"octal\": \"377\"\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "number-base-converter",
+    "mode": "hex",
+    "input": "FF",
+    "fields": {},
+    "expected": "{\n  \"decimal\": \"255\",\n  \"hexadecimal\": \"FF\",\n  \"binary\": \"11111111\",\n  \"octal\": \"377\"\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "number-base-converter",
+    "mode": "binary",
+    "input": "11111111",
+    "fields": {},
+    "expected": "{\n  \"decimal\": \"255\",\n  \"hexadecimal\": \"FF\",\n  \"binary\": \"11111111\",\n  \"octal\": \"377\"\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "number-base-converter",
+    "mode": "octal",
+    "input": "377",
+    "fields": {},
+    "expected": "{\n  \"decimal\": \"255\",\n  \"hexadecimal\": \"FF\",\n  \"binary\": \"11111111\",\n  \"octal\": \"377\"\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "number-base-converter",
+    "mode": "hex",
+    "input": "0xFF",
+    "fields": {},
+    "expectedError": "without prefixes"
+  }
+]

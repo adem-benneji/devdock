@@ -1,0 +1,9 @@
+{
+  "name": "devdock-contract-tooling",
+  "private": true,
+  "description": "Isolated OpenAPI generator toolchain; independent of Angular's TypeScript version",
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

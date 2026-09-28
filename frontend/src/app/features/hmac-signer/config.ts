@@ -1,0 +1,49 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Message to sign",
+  "note": "HMAC with SHA-256, SHA-384, or SHA-512 using Java cryptography. Secret is exact UTF-8 text (1–4,096 characters), not hex/Base64. Signatures are hex without prefixes. Secrets are sent to the backend and removed with temporary execution data. Provider-specific timestamp/signature framing is not added.",
+  "modes": [
+    {
+      "value": "sha256",
+      "label": "Sign SHA256"
+    },
+    {
+      "value": "sha384",
+      "label": "Sign SHA384"
+    },
+    {
+      "value": "sha512",
+      "label": "Sign SHA512"
+    },
+    {
+      "value": "verify-sha256",
+      "label": "Verify SHA256"
+    },
+    {
+      "value": "verify-sha384",
+      "label": "Verify SHA384"
+    },
+    {
+      "value": "verify-sha512",
+      "label": "Verify SHA512"
+    }
+  ],
+  "fields": [
+    {
+      "key": "secret",
+      "label": "Secret key (UTF-8 text)",
+      "initial": "",
+      "multiline": false,
+      "maxLength": 4096,
+      "secret": true
+    },
+    {
+      "key": "signature",
+      "label": "Hex signature (verify mode)",
+      "initial": "",
+      "multiline": false,
+      "maxLength": 128,
+      "secret": false
+    }
+  ]
+};

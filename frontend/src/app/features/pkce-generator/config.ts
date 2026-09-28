@@ -1,0 +1,16 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "PKCE verifier (derive mode)",
+  "note": "Generate uses 32 cryptographically random bytes for a 43-character verifier. Derive accepts 43–128 ASCII letters, digits, hyphen, period, underscore, or tilde. Uses S256 only; does not send OAuth requests. Verifiers are retained only in temporary execution data until retrieval or expiry.",
+  "modes": [
+    {
+      "value": "generate",
+      "label": "Generate verifier & challenge"
+    },
+    {
+      "value": "derive",
+      "label": "Derive S256 challenge"
+    }
+  ],
+  "fields": []
+};

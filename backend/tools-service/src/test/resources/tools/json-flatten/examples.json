@@ -1,0 +1,32 @@
+[
+  {
+    "id": "json-flatten",
+    "mode": "flatten",
+    "input": "{\"users\":[{\"name\":\"Ada\"}]}",
+    "fields": {},
+    "expected": "[\n  {\n    \"path\": [\n      \"users\",\n      0,\n      \"name\"\n    ],\n    \"value\": \"Ada\"\n  }\n]",
+    "jsonResult": true
+  },
+  {
+    "id": "json-flatten",
+    "mode": "unflatten",
+    "input": "[{\"path\":[\"users\",0,\"name\"],\"value\":\"Ada\"}]",
+    "fields": {},
+    "expected": "{\n  \"users\": [\n    {\n      \"name\": \"Ada\"\n    }\n  ]\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "json-flatten",
+    "mode": "unflatten",
+    "input": "[{\"path\":[1],\"value\":\"x\"}]",
+    "fields": {},
+    "expectedError": "contiguous"
+  },
+  {
+    "id": "json-flatten",
+    "mode": "unflatten",
+    "input": "[{\"path\":[],\"value\":1},{\"path\":[\"x\"],\"value\":2}]",
+    "fields": {},
+    "expectedError": "conflict"
+  }
+]

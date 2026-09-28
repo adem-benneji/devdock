@@ -1,0 +1,59 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          httpclient:
+            connect-timeout: 2000
+            response-timeout: 10s
+          routes:
+            - id: tools-contract
+              uri: ${TOOLS_SERVICE_URL:http://127.0.0.1:8082}
+              predicates:
+                - Path=/api/contracts/tools
+              filters:
+                - SetPath=/v3/api-docs
+            - id: snippets-contract
+              uri: ${SNIPPETS_SERVICE_URL:http://127.0.0.1:8083}
+              predicates:
+                - Path=/api/contracts/snippets
+              filters:
+                - SetPath=/v3/api-docs
+            # Preserve the full path; downstream controllers should use /api/<service>.
+            - id: auth-service
+              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/auth/**
+            - id: tools-service
+              uri: ${TOOLS_SERVICE_URL:http://127.0.0.1:8082}
+              predicates:
+                - Path=/api/tools/**
+            - id: snippets-service
+              uri: ${SNIPPETS_SERVICE_URL:http://127.0.0.1:8083}
+              predicates:
+                - Path=/api/snippets/**
+          globalcors:
+            add-to-simple-url-handler-mapping: true
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - ${FRONTEND_ORIGIN:http://localhost:4200}
+                allowedMethods: [GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD]
+                allowedHeaders: [Authorization, Content-Type, Accept, X-Execution-Token]
+                allowCredentials: false
+                maxAge: 3600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

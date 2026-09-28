@@ -1,0 +1,9 @@
+[
+  {
+    "id": "markdown-table",
+    "mode": "generate",
+    "input": "name,role\nAda,Developer",
+    "fields": {},
+    "expected": "| name | role |\n| --- | --- |\n| Ada | Developer |"
+  }
+]

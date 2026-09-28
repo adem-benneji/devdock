@@ -1,0 +1,30 @@
+[
+  {
+    "id": "base64",
+    "mode": "encode",
+    "input": "Hello",
+    "fields": {},
+    "expected": "SGVsbG8="
+  },
+  {
+    "id": "base64",
+    "mode": "decode",
+    "input": "SGVsbG8=",
+    "fields": {},
+    "expected": "Hello"
+  },
+  {
+    "id": "base64",
+    "mode": "decode",
+    "input": "YR==",
+    "fields": {},
+    "expectedError": "valid, padded Base64"
+  },
+  {
+    "id": "base64",
+    "mode": "decode",
+    "input": "/w==",
+    "fields": {},
+    "expectedError": "UTF-8"
+  }
+]

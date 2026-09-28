@@ -1,0 +1,15 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Text or JSON string",
+  "note": "Escape produces a complete JSON string including outer quotes. Unescape expects exactly one quoted JSON string. This handles JSON string syntax; it is not a general JavaScript, SQL, or shell escaper.",
+  "modes": [
+    {
+      "value": "escape",
+      "label": "Escape as JSON string"
+    },
+    {
+      "value": "unescape",
+      "label": "Unescape JSON string"
+    }
+  ]
+};

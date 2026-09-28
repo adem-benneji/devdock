@@ -1,0 +1,35 @@
+[
+  {
+    "id": "gzip-deflate",
+    "mode": "compress-gzip",
+    "input": "Hello DevDock",
+    "fields": {}
+  },
+  {
+    "id": "gzip-deflate",
+    "mode": "compress-deflate",
+    "input": "Hello DevDock",
+    "fields": {}
+  },
+  {
+    "id": "gzip-deflate",
+    "mode": "decompress-gzip",
+    "input": "H4sIAAAAAAAC//NIzcnJV3BJLXPJT84GAFHKEO4NAAAA",
+    "fields": {},
+    "expected": "Hello DevDock"
+  },
+  {
+    "id": "gzip-deflate",
+    "mode": "decompress-deflate",
+    "input": "eJzzSM3JyVdwSS1zyU/OBgAgSgS1",
+    "fields": {},
+    "expected": "Hello DevDock"
+  },
+  {
+    "id": "gzip-deflate",
+    "mode": "decompress-gzip",
+    "input": "not base64",
+    "fields": {},
+    "expectedError": "Base64"
+  }
+]

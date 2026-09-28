@@ -10,7 +10,7 @@ const cases = [
   { id: 'gzip-deflate', modes: [['compress-gzip', /^[A-Za-z0-9+/]+=*$/], ['decompress-gzip', /^Hello DevDock$/], ['compress-deflate', /^[A-Za-z0-9+/]+=*$/], ['decompress-deflate', /^Hello DevDock$/]] },
   { id: 'hash-generator', modes: [['sha256', /^[a-f0-9]{64}$/], ['sha384', /^[a-f0-9]{96}$/], ['sha512', /^[a-f0-9]{128}$/]] },
 ] as const;
-for (const item of cases) test(`${item.id} executes all workflow examples without API requests`, async ({ page }) => {
+for (const item of cases) test(`${item.id} executes all workflow examples through Spring Boot APIs`, async ({ page }) => {
   const calls: string[] = [];
   page.on('request', req => { if (new URL(req.url()).pathname.startsWith('/api/')) calls.push(req.url()); });
   await page.goto(`/tools/${item.id}`);
@@ -22,7 +22,7 @@ for (const item of cases) test(`${item.id} executes all workflow examples withou
     await expect(page.getByLabel('Result', { exact: true })).toHaveValue(result);
     await expect(page.getByRole('alert')).toHaveCount(0);
   }
-  expect(calls).toEqual([]);
+  expect(calls.some(url => url.includes('/executions'))).toBe(true);
 });
 
 test('generated schema validates a document; failures give paths and remote refs are not fetched', async ({ page }) => {
@@ -49,17 +49,17 @@ test('generated schema validates a document; failures give paths and remote refs
 
 test('pathological schema patterns time out while the page responds, then recover', async ({ page }) => {
   await page.goto('/tools/json-schema-validator');
-  await page.getByLabel('JSON document', { exact: true }).fill(JSON.stringify('a'.repeat(35) + '!'));
+  await page.getByLabel('JSON document', { exact: true }).fill(JSON.stringify('a'.repeat(99000) + '!'));
   await page.getByLabel('JSON Schema', { exact: true }).fill('{"type":"string","pattern":"(a+)+$"}');
   await page.getByRole('button', { name: 'Run tool' }).click();
   await page.getByRole('button', { name: 'Favorite', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('Schema validation exceeded 3 seconds', { timeout: 6000 });
+  await expect(page.getByRole('alert')).toContainText('Execution exceeded its time limit', { timeout: 15000 });
   await page.getByRole('button', { name: 'Load example' }).click();
   await page.getByRole('button', { name: 'Run tool' }).click();
   await expect(page.getByLabel('Result', { exact: true })).toHaveValue(/"valid": true/);
 });
 
-test('compression round trips Unicode and empty strings in both real browser codecs', async ({ page }) => {
+test('compression round trips Unicode and empty strings through both real backend codecs', async ({ page }) => {
   await page.goto('/tools/gzip-deflate');
   for (const format of ['gzip', 'deflate']) for (const input of ['Hello é 👋\nline two', '', '\uFEFFdata']) {
     await page.getByLabel('Operation', { exact: true }).selectOption('compress-' + format);

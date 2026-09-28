@@ -1,0 +1,38 @@
+[
+  {
+    "id": "line-endings",
+    "mode": "inspect",
+    "input": "first\r\nsecond\nthird\r",
+    "fields": {},
+    "expected": "{\n  \"crlf\": 1,\n  \"lf\": 1,\n  \"cr\": 1,\n  \"leadingBom\": false\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "line-endings",
+    "mode": "lf",
+    "input": "first\r\nsecond\n",
+    "fields": {},
+    "expected": "first\nsecond\n"
+  },
+  {
+    "id": "line-endings",
+    "mode": "crlf",
+    "input": "first\r\nsecond\n",
+    "fields": {},
+    "expected": "first\r\nsecond\r\n"
+  },
+  {
+    "id": "line-endings",
+    "mode": "cr",
+    "input": "first\r\nsecond\n",
+    "fields": {},
+    "expected": "first\rsecond\r"
+  },
+  {
+    "id": "line-endings",
+    "mode": "strip-bom",
+    "input": "﻿hello",
+    "fields": {},
+    "expected": "hello"
+  }
+]

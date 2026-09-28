@@ -1,0 +1,17 @@
+[
+  {
+    "id": "json-lines",
+    "mode": "to-array",
+    "input": "{\"id\":1}\n{\"id\":2}",
+    "fields": {},
+    "expected": "[\n  {\n    \"id\": 1\n  },\n  {\n    \"id\": 2\n  }\n]",
+    "jsonResult": true
+  },
+  {
+    "id": "json-lines",
+    "mode": "to-lines",
+    "input": "[{\"id\":1},{\"id\":2}]",
+    "fields": {},
+    "expected": "{\"id\":1}\n{\"id\":2}"
+  }
+]

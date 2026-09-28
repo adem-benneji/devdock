@@ -87,7 +87,7 @@ def main():
     tools_port, snippets_port, gateway_port, frontend_port = port(), port(), port(), port()
     base = f'http://127.0.0.1:{gateway_port}'
     def java(service, service_port, extra=None):
-        return start(service, ['java', '-jar', str(ROOT / service / 'target' / (service + '-0.0.1-SNAPSHOT.jar'))],
+        return start(service, ['java', '-jar', str(ROOT / 'backend' / service / 'target' / (service + '-0.0.1-SNAPSHOT.jar'))],
                      {'SERVER_PORT': str(service_port), 'SERVER_ADDRESS': '127.0.0.1', **(extra or {})})
     snippets_env = {'SNIPPETS_DB_URL': DB_URL, 'SNIPPETS_DB_USER': DB_USER, 'SNIPPETS_DB_PASSWORD': DB_PASSWORD,
                     'SPRING_FLYWAY_SCHEMAS': SCHEMA, 'SPRING_DATASOURCE_HIKARI_SCHEMA': SCHEMA}
@@ -153,6 +153,31 @@ def main():
         assert headers['Access-Control-Allow-Origin'] == f'http://127.0.0.1:{frontend_port}'
         tools = java('tools-service', tools_port)
         ready(f'http://127.0.0.1:{tools_port}', tools)
+        # Exercise the asynchronous contract through the real gateway.
+        ticket, _ = request(base, 'POST', '/api/tools/base64/executions', {'input': 'exact', 'mode': 'encode', 'fields': {}}, 202)
+        job = '/api/tools/executions/' + ticket['id']
+        token = {'X-Execution-Token': ticket['token']}
+        request(base, 'GET', job, expected=404, headers={'X-Execution-Token': 'wrong'})
+        request(base, 'GET', job, expected=400)
+        deadline = time.monotonic() + 15
+        while True:
+            execution, _ = request(base, 'GET', job, headers=token)
+            if execution['state'] not in ('QUEUED', 'RUNNING'):
+                break
+            assert time.monotonic() < deadline, 'Execution did not finish'
+            time.sleep(.1)
+        assert execution['state'] == 'SUCCEEDED', execution
+        assert execution['result']['utility']['output'] == 'ZXhhY3Q='
+        request(base, 'GET', job + '/download', expected=409, headers=token)
+        request(base, 'DELETE', job, expected=204, headers=token)
+        request(base, 'GET', job, expected=404, headers=token)
+        request(base, 'POST', '/api/tools/base64/executions', {'input': 'x', 'mode': 'invalid'}, 400)
+        request(base, 'GET', '/api/contracts/tools')
+        request(base, 'GET', '/api/contracts/snippets')
+        subprocess.run(['python3', str(ROOT / 'scripts/api-contracts.py'), '--check',
+                        '--tools-url', f'http://127.0.0.1:{tools_port}/v3/api-docs',
+                        '--snippets-url', f'http://127.0.0.1:{snippets_port}/v3/api-docs'], check=True)
+        print('PASS: asynchronous jobs, private result tokens, deletion and live OpenAPI contract checks.', flush=True)
         if args.postgres_data:
             pg_ctl = shutil.which('pg_ctl')
             assert pg_ctl, 'pg_ctl must be on PATH for database outage testing'

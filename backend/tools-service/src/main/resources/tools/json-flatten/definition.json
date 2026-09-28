@@ -1,0 +1,14 @@
+{
+  "label": "JSON document or path entries",
+  "note": "Flattening produces path/value entries: strings identify object keys, numbers identify array indexes. This format preserves dots, empty keys, numeric object keys, empty containers, and root values. At most 5,000 leaves and 64 path segments; conflicting and sparse paths are rejected.",
+  "modes": [
+    {
+      "value": "flatten",
+      "label": "Flatten to path entries"
+    },
+    {
+      "value": "unflatten",
+      "label": "Restore JSON"
+    }
+  ]
+}

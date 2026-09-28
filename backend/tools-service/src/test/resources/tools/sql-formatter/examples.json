@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sql-formatter",
+    "mode": "sql",
+    "input": "select id, name from users where active = 1 order by name;",
+    "fields": {}
+  },
+  {
+    "id": "sql-formatter",
+    "mode": "postgresql",
+    "input": "select id, name from users where active = 1 order by name;",
+    "fields": {}
+  },
+  {
+    "id": "sql-formatter",
+    "mode": "mysql",
+    "input": "select id, name from users where active = 1 order by name;",
+    "fields": {}
+  },
+  {
+    "id": "sql-formatter",
+    "mode": "sqlite",
+    "input": "select id, name from users where active = 1 order by name;",
+    "fields": {}
+  },
+  {
+    "id": "sql-formatter",
+    "mode": "tsql",
+    "input": "select id, name from users where active = 1 order by name;",
+    "fields": {}
+  }
+]

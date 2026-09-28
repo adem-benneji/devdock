@@ -1,0 +1,11 @@
+import type { Configuration } from '../../utilities/configuration';
+export const config: Configuration = {
+  "label": "Text for a URL slug",
+  "note": "Lowercases text, removes decomposable combining accents, and joins letters/numbers with hyphens. Non-Latin letters remain Unicode; this is not transliteration or guaranteed uniqueness. Encode the slug as a URL component when needed.",
+  "modes": [
+    {
+      "value": "generate",
+      "label": "Generate slug"
+    }
+  ]
+};

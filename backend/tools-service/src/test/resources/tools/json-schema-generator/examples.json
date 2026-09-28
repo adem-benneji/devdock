@@ -1,0 +1,10 @@
+[
+  {
+    "id": "json-schema-generator",
+    "mode": "generate",
+    "input": "{\"name\":\"Ada\"}",
+    "fields": {},
+    "expected": "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"name\"\n  ]\n}",
+    "jsonResult": true
+  }
+]

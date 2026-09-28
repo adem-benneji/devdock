@@ -1,0 +1,10 @@
+[
+  {
+    "id": "url-parser",
+    "mode": "parse",
+    "input": "https://example.com/search?q=dev+dock&tag=api&tag=json#results",
+    "fields": {},
+    "expected": "{\n  \"protocol\": \"https\",\n  \"origin\": \"https://example.com\",\n  \"hostname\": \"example.com\",\n  \"port\": \"443\",\n  \"pathname\": \"/search\",\n  \"query\": [\n    {\n      \"name\": \"q\",\n      \"value\": \"dev dock\"\n    },\n    {\n      \"name\": \"tag\",\n      \"value\": \"api\"\n    },\n    {\n      \"name\": \"tag\",\n      \"value\": \"json\"\n    }\n  ],\n  \"fragment\": \"results\",\n  \"credentialsPresent\": false\n}",
+    "jsonResult": true
+  }
+]

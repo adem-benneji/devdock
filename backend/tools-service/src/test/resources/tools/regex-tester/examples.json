@@ -1,0 +1,25 @@
+[
+  {
+    "id": "regex-tester",
+    "mode": "match",
+    "input": "Ada 42, Lin 7",
+    "fields": {
+      "pattern": "\\d+",
+      "flags": "g",
+      "replacement": "#"
+    },
+    "expected": "{\n  \"count\": 2,\n  \"matches\": [\n    {\n      \"text\": \"42\",\n      \"index\": 4,\n      \"end\": 6,\n      \"groups\": [],\n      \"namedGroups\": {}\n    },\n    {\n      \"text\": \"7\",\n      \"index\": 12,\n      \"end\": 13,\n      \"groups\": [],\n      \"namedGroups\": {}\n    }\n  ]\n}",
+    "jsonResult": true
+  },
+  {
+    "id": "regex-tester",
+    "mode": "replace",
+    "input": "Ada 42, Lin 7",
+    "fields": {
+      "pattern": "\\d+",
+      "flags": "g",
+      "replacement": "#"
+    },
+    "expected": "Ada #, Lin #"
+  }
+]
